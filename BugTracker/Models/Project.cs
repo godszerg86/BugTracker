@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -9,15 +10,16 @@ namespace BugTracker.Models
     {
         public Project()
         {
-            Bugs = new List<Bug>();
+            AssignedDevelopers = new HashSet<ApplicationUser>();
         }
 
         public int Id { get; set; }
 
         //foreign keys connections
-        public int AuthroId { get; set; }
-        public virtual ApplicationUser Author {get; set;}
+        public int AuthorId { get; set; }
+        public virtual ApplicationUser Author { get; set; }
 
+        public virtual ICollection<ApplicationUser> AssignedDevelopers { get; set; }
 
         // local properties
         public DateTime Created { get; set; }
@@ -25,7 +27,6 @@ namespace BugTracker.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public List<Bug> Bugs { get; set; }
 
 
 
