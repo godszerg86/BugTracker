@@ -16,7 +16,7 @@ namespace BugTracker.Models
         public int Id { get; set; }
 
         //foreign keys connections
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
         public virtual ApplicationUser Author { get; set; }
 
         public virtual ICollection<ApplicationUser> AssignedDevelopers { get; set; }

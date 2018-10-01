@@ -48,7 +48,7 @@ namespace BugTracker.Models
             return new ApplicationDbContext();
         }
 
-        DbSet<Project> Projects { get; set; }
-     
+       public DbSet<Project> Projects { get; set; }
+
     }
 }
