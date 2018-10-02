@@ -21,6 +21,9 @@ namespace BugTracker.Models
 
         public virtual ICollection<ApplicationUser> AssignedDevelopers { get; set; }
 
+        public int ProjectTypeId { get; set; }
+        public virtual ProjectType ProjectType { get; set; }
+
         // local properties
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }

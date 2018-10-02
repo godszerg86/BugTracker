@@ -69,6 +69,19 @@ namespace BugTracker.Migrations
             {
                 userManager.AddToRole(adminUser.Id, "Admin");
             }
+
+            //seeding types table
+            if(!context.ProjectTypes.Any())
+            {
+                context.ProjectTypes.AddOrUpdate(item => item.Id,
+                    new ProjectType() { Type = "Angular" },
+                    new ProjectType() { Type = "Vuejs" },
+                    new ProjectType() { Type = "React" },
+                    new ProjectType() { Type = "ASP.NET" },
+                    new ProjectType() { Type = "Nodejs" }
+                    );
+            }
+
         }
     }
 }

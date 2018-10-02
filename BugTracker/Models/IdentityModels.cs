@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
@@ -16,7 +17,6 @@ namespace BugTracker.Models
             ProjectsCreated = new HashSet<Project>();
             ProjectsManage = new HashSet<Project>();
         }
-
         public string DisplayName { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
@@ -32,6 +32,8 @@ namespace BugTracker.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            userIdentity.AddClaim(new Claim("DisplayName", this.DisplayName));
+
             return userIdentity;
         }
     }
@@ -48,7 +50,7 @@ namespace BugTracker.Models
             return new ApplicationDbContext();
         }
 
-       public DbSet<Project> Projects { get; set; }
-
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectType> ProjectTypes { get; set; }
     }
 }

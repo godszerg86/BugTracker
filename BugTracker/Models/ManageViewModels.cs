@@ -58,6 +58,15 @@ namespace BugTracker.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class ChangeDisplayNameModel
+    {
+        [Required(ErrorMessage ="New display name required")]
+        [Display(Name = "New Display Name")]
+        public string NewDisplayName { get; set; }
+
+    }
+
+
     public class AddPhoneNumberViewModel
     {
         [Required]

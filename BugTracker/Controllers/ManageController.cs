@@ -322,6 +322,41 @@ namespace BugTracker.Controllers
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
+        //
+        // GET: /Manage/CHangeDisplayName
+        public ActionResult ChangeDisplayName()
+        {
+            return View();
+        }
+
+
+        //
+        // POST: /Manage/CHangeDisplayName
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeDisplayName(ChangeDisplayNameModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var dbUser = UserManager.FindById(User.Identity.GetUserId());
+            dbUser.DisplayName = model.NewDisplayName;
+            var result = await UserManager.UpdateAsync(dbUser);
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+            }
+            AddErrors(result);
+            return View(model);
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
