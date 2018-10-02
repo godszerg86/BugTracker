@@ -18,9 +18,9 @@
 
     <!-- Morris Charts CSS -->
     @*<link href="../vendor/morrisjs/morris.css" rel="stylesheet">*@
-    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">*@
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <!-- Custom Fonts -->
-    <link href="~/Content/Template/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    @*<link href="~/Content/Template/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">*@
 
 </head>
 <body>
@@ -37,67 +37,32 @@
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
-
+            
             <!-- /.dropdown -->
             <!-- /.dropdown -->
-            @*<li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+            <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-wrench fa-fw"></i> <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts">
+                <li>
+                    <a href=@Url.Action("Create")>
+                        <div>
+                            <i class="fa fa-plus-square fa-fw"></i> Add project
+                        </div>
                     </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-comment fa-fw"></i> New Comment
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                    <span class="pull-right text-muted small">12 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-tasks fa-fw"></i> New Task
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>See All Alerts</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </li>*@
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#">
+                        <div>
+                            <i class="fa fa-user-edit fa-fw"></i> Manage users
+                        </div>
+                    </a>
+                </li>
+                
+            </ul>
+        </li>
             <!-- /.dropdown -->
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -108,35 +73,37 @@
                     {
                         using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
-                        @Html.AntiForgeryToken()
+                            @Html.AntiForgeryToken()
 
-                        <li>
-                            <a title="Manage" href=@Url.Action("Index", "Manage",routeValues: null)><i class="fa fa-user fa-fw"></i>@User.Identity.GetUserDsiplayName()</a>
-                            @*@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
-                        </li>
-                        <li>
-                            <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-power-off"></i> Log out</a>
-                        </li>
+                            <li>
+                                <a title="Manage" href=@Url.Action("Index", "Manage",routeValues: null)><i class="fa fa-user fa-fw"></i>@User.Identity.GetUserDsiplayName()</a>
+                                @*@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-power-off"></i> Log out</a>
+                            </li>
                         }
                     }
                     else
                     {
                         <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                        <li class="divider"></li>
                         <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
                     }
 
 
 
                     @*<li>
-                            <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>*@
+            <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+            <a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+        </li>*@
                 </ul>
                 <!-- /.dropdown-user -->
             </li>
@@ -159,10 +126,10 @@
                         <!-- /input-group -->
                     </li>
                     <li>
-                        <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        <a href="/"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fas fa-chart-pie fa-fw"></i> Charts<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="flot.html">Flot Charts</a>
@@ -234,7 +201,7 @@
                         <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fas fa-file-signature fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="blank.html">Blank Page</a>

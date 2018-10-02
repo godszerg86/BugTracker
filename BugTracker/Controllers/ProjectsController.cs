@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -38,6 +39,7 @@ namespace BugTracker.Controllers
         // GET: Projects/Create
         public ActionResult Create()
         {
+            ViewBag.ProjectTypeId = new SelectList(db.ProjectTypes, "Id", "Type");
             return View();
         }
 
@@ -46,10 +48,12 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,AuthorId,Created,Updated,Name,Description")] Project project)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,ProjectTypeId,Created")] Project project)
         {
             if (ModelState.IsValid)
             {
+                project.AuthorId = User.Identity.GetUserId();
+                project.Created = DateTime.Now;
                 db.Projects.Add(project);
                 db.SaveChanges();
                 return RedirectToAction("Index");
