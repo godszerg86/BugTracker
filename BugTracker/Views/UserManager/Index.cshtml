@@ -43,30 +43,33 @@
                                         <td>@user.FirstName</td>
                                         <td>@user.LastName</td>
                                         <td>
-                                            <ul>
-                                                @foreach (var item in user.ProjectsCreated)
-                                                {
-                                                    <li>@item.Name</li>
-                                                }
-                                            </ul>
+
+                                            @foreach (var item in user.ProjectsCreated)
+                                            {
+                                                <h5> <i class="fas fa-project-diagram fa-fw"></i> @item.Name</h5>
+                                            }
+
                                         </td>
                                         <td>
-                                            <ul>
-                                                @foreach (var item in user.ProjectAssigned)
-                                                {
-                                                    <li>@item.Name</li>
-                                                }
-                                                <li>  @Html.ActionLink("Manage", "ManageUserAssignedProjects", new { id = user.Id })</li>
-                                            </ul>
+
+                                            @foreach (var item in user.ProjectAssigned)
+                                            {
+                                                <h5><i class="fas fa-project-diagram fa-fw"></i> @item.Name</h5>
+                                            }
+
+
+                                            <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserAssignedProjects", new { id =user.Id})'">MANAGE</button>
+
+
                                         </td>
                                         <td>
-                                            <ul>
+                                            
                                                 @foreach (var item in user.Roles)
                                                 {
-                                                    <li>@item</li>
+                                                    <h5><i class="far fa-user fa-fw"></i> @item</h5>
                                                 }
-                                                <li>  @Html.ActionLink("Manage", "ManageUserRoles", new { id = user.Id })</li>
-                                            </ul>
+                                                   <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserRoles", new { id =user.Id})'">MANAGE</button>
+                                           
                                         </td>
 
                                     </tr>
