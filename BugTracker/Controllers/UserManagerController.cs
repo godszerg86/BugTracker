@@ -83,6 +83,11 @@ namespace BugTracker.Controllers
         }
 
 
+        public ActionResult ManageUserRoles (string id)
+        {
+            return View();
+        }
+
 
 
         protected override void Dispose(bool disposing)

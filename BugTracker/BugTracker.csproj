@@ -438,6 +438,7 @@
     <Content Include="Views\Manage\ChangeDisplayName.cshtml" />
     <Content Include="Views\UserManager\Index.cshtml" />
     <Content Include="Views\UserManager\ManageUserAssignedProjects.cshtml" />
+    <Content Include="Views\UserManager\ManageUserRoles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
