@@ -1,0 +1,95 @@
+﻿@using BugTracker.Models.classes
+@model UserListModel
+
+
+
+
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Mange projects for <strong>@Model.DisplayName</strong> </h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        @using (Html.BeginForm("ManageUserAssignedProjects", "UserManager", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Email)
+            <h4>Assigned projects:</h4>
+            foreach (var item in Model.ProjectAssigned)
+            {
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    @Html.Raw(item.TypeCss[item.ProjectTypeId])
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">26</div>
+                                    <div>Opened tickets</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="text-center">@item.Name</h4>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                        <input type="checkbox" name="assign" value="@item.Id" />
+                        <label for="assign">Unassign</label>
+                    </div>
+                </div>
+            }
+            <hr />
+
+
+            <h4>Assign new pojects to user:</h4>
+            foreach (var item in Model.ProjectsNotAssigned)
+            {
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    @Html.Raw(item.TypeCss[item.ProjectTypeId])
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">26</div>
+                                    <div>Opened tickets</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="text-center">@item.Name</h4>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                        <input type="checkbox" name="assign" value="@item.Id" />
+                        <label for="assign">Assign</label>
+                    </div>
+                </div>
+            }
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-8">
+                    <input type="submit" value="Change" class="btn btn-default" />
+                </div>
+            </div>
+        }
+
+    </div>
