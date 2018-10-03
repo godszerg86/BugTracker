@@ -29,7 +29,6 @@
                                     <th>Display Name</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
-                                    <th>E-Mail</th>
                                     <th>Projects Created</th>
                                     <th>Projects Assigned</th>
                                     <th>Roles</th>
@@ -43,7 +42,6 @@
                                         <td>@user.DisplayName</td>
                                         <td>@user.FirstName</td>
                                         <td>@user.LastName</td>
-                                        <td>@user.Email</td>
                                         <td>
                                             <ul>
                                                 @foreach (var item in user.ProjectsCreated)
@@ -58,7 +56,7 @@
                                                 {
                                                     <li>@item.Name</li>
                                                 }
-                                                <li>  @Html.ActionLink("Manage", "ManageUserAssignedProjects", new { email = user.Email })</li>
+                                                <li>  @Html.ActionLink("Manage", "ManageUserAssignedProjects", new { id = user.Id })</li>
                                             </ul>
                                         </td>
                                         <td>
@@ -67,7 +65,7 @@
                                                 {
                                                     <li>@item</li>
                                                 }
-                                                <li>  @Html.ActionLink("Manage", "ManageUserRoles", new { email = user.Email })</li>
+                                                <li>  @Html.ActionLink("Manage", "ManageUserRoles", new { id = user.Id })</li>
                                             </ul>
                                         </td>
 

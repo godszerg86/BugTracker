@@ -33,21 +33,20 @@ namespace BugTracker.Controllers
                 userModel.DisplayName = user.DisplayName;
                 userModel.LastName = user.LastName;
                 userModel.FirstName = user.FirstName;
-                userModel.Email = user.Email;
+                userModel.Id = user.Id;
                 userModel.ProjectsCreated = user.ProjectsCreated.ToList();
                 userModel.ProjectAssigned = user.ProjectsManage.ToList();
                 userModel.Roles = userManager.GetRoles(user.Id);
                 userList.Add(userModel);
             }
 
-
             return View(userList);
         }
 
         //GET: ManageUser
-        public ActionResult ManageUserAssignedProjects(string email)
+        public ActionResult ManageUserAssignedProjects(string id)
         {
-            var userDB = userManager.FindByEmail(email);
+            var userDB = userManager.FindById(id);
             UserListModel userModel = new UserListModel();
             userModel.DisplayName = userDB.DisplayName;
             userModel.ProjectAssigned = userDB.ProjectsManage.ToList();
@@ -66,10 +65,33 @@ namespace BugTracker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageUserAssignedProjects(int[] assign, string email)
+        public ActionResult ManageUserAssignedProjects(int[] assign, string id)
         {
-
+            var userDB = userManager.FindById(id);
+            userDB.ProjectsManage.Clear();
+            if (assign != null)
+            {
+                var projectsDB = db.Projects.ToList();
+                foreach (var item in assign)
+                {
+                    var arrayProject = projectsDB.FirstOrDefault(proj => proj.Id == item);
+                    userDB.ProjectsManage.Add(arrayProject);
+                }
+            }
+            db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
     }
