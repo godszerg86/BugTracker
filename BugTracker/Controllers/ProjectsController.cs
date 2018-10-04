@@ -91,6 +91,7 @@ namespace BugTracker.Controllers
                 projectDB.ProjectTypeId = project.ProjectTypeId;
                 projectDB.Name = project.Name;
                 projectDB.Description = project.Description;
+                projectDB.Updated = DateTime.Now;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
