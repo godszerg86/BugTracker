@@ -16,7 +16,8 @@ namespace BugTracker.Models.classes
         public ICollection<Project> ProjectsNotAssigned { get; set; }
         public ICollection<Project> ProjectAssigned { get; set; }
         public ICollection<string> Roles { get; set; }
-        public MultiSelectList RolesSelect { get; set; }
+        public MultiSelectList RolesList { get; set; }
+        public string[] SelectedRoles { get; set; }
 
     }
 }

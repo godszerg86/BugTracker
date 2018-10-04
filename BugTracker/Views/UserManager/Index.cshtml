@@ -18,7 +18,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Kitchen Sink
+                    Users table
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -37,44 +37,33 @@
                             <tbody>
                                 @foreach (var user in Model)
                                 {
-
                                     <tr>
                                         <td>@user.DisplayName</td>
                                         <td>@user.FirstName</td>
                                         <td>@user.LastName</td>
                                         <td>
-
                                             @foreach (var item in user.ProjectsCreated)
                                             {
                                                 <h5> <i class="fas fa-project-diagram fa-fw"></i> @item.Name</h5>
                                             }
-
                                         </td>
-                                        <td>
-
+                                        <td class="td-btn">
                                             @foreach (var item in user.ProjectAssigned)
                                             {
                                                 <h5><i class="fas fa-project-diagram fa-fw"></i> @item.Name</h5>
                                             }
-
-
-                                            <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserAssignedProjects", new { id =user.Id})'">MANAGE</button>
-
-
+                                            <button  class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserAssignedProjects", new { id =user.Id})'">MANAGE</button>
                                         </td>
-                                        <td>
-                                            
-                                                @foreach (var item in user.Roles)
-                                                {
-                                                    <h5><i class="far fa-user fa-fw"></i> @item</h5>
-                                                }
-                                                   <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserRoles", new { id =user.Id})'">MANAGE</button>
-                                           
+                                        <td class="td-btn">
+                                            @foreach (var item in user.Roles)
+                                            {
+                                                <h5><i class="far fa-user fa-fw"></i> @item</h5>
+                                            }
+                                            <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserRoles", new { id =user.Id})'">MANAGE</button>
                                         </td>
 
                                     </tr>
                                 }
-
                             </tbody>
                         </table>
                     </div>

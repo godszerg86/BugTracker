@@ -14,10 +14,12 @@ namespace BugTracker.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserManager<ApplicationUser> userManager { get; set; }
+        private RoleManager<IdentityRole> roleManager { get; set; }
         public ICollection<UserListModel> userList { get; set; }
         public UserManagerController()
         {
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
         }
 
         // GET: UserManager
@@ -85,7 +87,23 @@ namespace BugTracker.Controllers
 
         public ActionResult ManageUserRoles (string id)
         {
-            return View();
+            var userDB = userManager.FindById(id);
+            UserListModel userModel = new UserListModel();
+            userModel.DisplayName = userDB.DisplayName;
+            userModel.Id = userDB.Id;
+            var appRoles = roleManager.Roles.ToList();
+            //userModel.Roles = userManager.GetRoles(id);
+
+
+            var userRolesIds = (from userRole in userDB.Roles
+                             join role in db.Roles on userRole.RoleId
+                             equals role.Id
+                             select role.Id).ToList();
+                                 
+
+
+            userModel.RolesList = new MultiSelectList(appRoles,"Id","Name", userRolesIds);
+            return View(userModel);
         }
 
 
