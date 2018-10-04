@@ -7,7 +7,7 @@ namespace BugTracker.Models
 {
     public class Ticket
     {
-        public int Id1 { get; set; }
+        public int Id { get; set; }
 
         //many-to-manu relations
         public int ProjectId { get; set; }
