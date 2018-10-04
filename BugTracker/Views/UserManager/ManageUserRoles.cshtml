@@ -12,11 +12,11 @@
     </div>
     <!-- /.row -->
     <div class="row">
-        <h3>Assign user roles: (select multiply holding CTRL key)</h3>
+        <h3>Assign user role:</h3>
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            @Html.ListBoxFor(m => m.SelectedRoles, Model.RolesList)
+            @Html.DropDownListFor(m => m.SelectedRole, Model.RolesList)
             @Html.HiddenFor(m => m.Id)
             <input type="submit" value="Change" />
         }

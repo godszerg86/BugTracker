@@ -1,7 +1,9 @@
 ﻿using BugTracker.Models;
 using BugTracker.Models.classes;
+using BugTracker.Models.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +15,20 @@ namespace BugTracker.Controllers
     public class UserManagerController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        private UserManager<ApplicationUser> userManager { get; set; }
-        private RoleManager<IdentityRole> roleManager { get; set; }
+       
         public ICollection<UserListModel> userList { get; set; }
-        public UserManagerController()
+        public UserHelper UserHelper { get; set; }
+       public UserManagerController()
         {
-            userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-            roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+             UserHelper = new UserHelper();
         }
-
         // GET: UserManager
         public ActionResult Index()
         {
 
             userList = new HashSet<UserListModel>();
             ICollection<ApplicationUser> usersDB = db.Users.ToList();
-
+            //var userHelper = new UserHelper();
             foreach (var user in usersDB)
             {
                 UserListModel userModel = new UserListModel();
@@ -38,7 +38,7 @@ namespace BugTracker.Controllers
                 userModel.Id = user.Id;
                 userModel.ProjectsCreated = user.ProjectsCreated.ToList();
                 userModel.ProjectAssigned = user.ProjectsManage.ToList();
-                userModel.Roles = userManager.GetRoles(user.Id);
+                userModel.Roles = UserHelper.GetRoles(user.Id);
                 userList.Add(userModel);
             }
 
@@ -48,10 +48,10 @@ namespace BugTracker.Controllers
         //GET: ManageUser
         public ActionResult ManageUserAssignedProjects(string id)
         {
-            var userDB = userManager.FindById(id);
+            var userDB = UserHelper.GetUserById(id);
             UserListModel userModel = new UserListModel();
             userModel.DisplayName = userDB.DisplayName;
-            userModel.ProjectAssigned = userDB.ProjectsManage.ToList();
+            userModel.ProjectAssigned = UserHelper.GetAllProjectsAssignedToUser(id);
 
             var projectsDB = db.Projects.ToList();
 
@@ -69,7 +69,7 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ManageUserAssignedProjects(int[] assign, string id)
         {
-            var userDB = userManager.FindById(id);
+            var userDB = UserHelper.GetUserById(id);
             userDB.ProjectsManage.Clear();
             if (assign != null)
             {
@@ -87,12 +87,12 @@ namespace BugTracker.Controllers
 
         public ActionResult ManageUserRoles (string id)
         {
-            var userDB = userManager.FindById(id);
+            var userDB = UserHelper.GetUserById(id);
             UserListModel userModel = new UserListModel();
             userModel.DisplayName = userDB.DisplayName;
             userModel.Id = userDB.Id;
-            var appRoles = roleManager.Roles.ToList();
-            userModel.Roles = userManager.GetRoles(id);
+            var appRoles = UserHelper.GetAllAppRoles();
+            userModel.Roles = UserHelper.GetRoles(id);
 
 
             //var userRolesIds = (from userRole in userDB.Roles
@@ -102,18 +102,22 @@ namespace BugTracker.Controllers
 
 
 
-            userModel.RolesList = new MultiSelectList(appRoles,"Name","Name", userModel.Roles);
+            userModel.RolesList = new SelectList(appRoles,"Name","Name", userModel.Roles.FirstOrDefault());
             return View(userModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageUserRoles(string[] selectedRoles, string id)
+        public ActionResult ManageUserRoles(string selectedRole, string id)
         {
-            var userDB = userManager.FindById(id);
-            var roles = userManager.GetRoles(id).ToArray();
+            var userDB = UserHelper.GetUserById(id);
+            var roles = UserHelper.GetRoles(id).ToArray();
 
-            userManager.RemoveFromRoles(id, roles);
-            userManager.AddToRoles(id, selectedRoles);
+            UserHelper.RemoveFromRoles(id, roles);
+            UserHelper.AddToRole(id, selectedRole);
+            
+            //: Refresh authentication cookies so the roles are updated instantly
+            var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            signInManager.SignIn(userDB, isPersistent: false, rememberBrowser: false);
 
             return RedirectToAction("Index");
         }

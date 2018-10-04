@@ -7,6 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
+using BugTracker.Models.classes;
+using BugTracker.Models.Helpers;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -37,31 +40,46 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Create
-        public ActionResult Create()
+        public ActionResult Create(int projectId)
         {
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "DisplayName");
-            ViewBag.DeveloperId = new SelectList(db.Users, "Id", "DisplayName");
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "AuthorId");
-            return View();
+            var ticketModel = new CreateTicketListModel();
+            ticketModel.ProjectId = projectId;
+            return View(ticketModel);
         }
 
         // POST: Tickets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles ="Submitter")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,AuthorId,DeveloperId,Title,Description,Created,Updated")] Ticket ticket)
+        public ActionResult Create([Bind(Include = "Id,ProjectId,,Title,Description")] Ticket ticket)
         {
-            if (ModelState.IsValid)
+            var projectDB = db.Projects.Find(ticket.ProjectId);
+            if (projectDB == null)
             {
-                db.Tickets.Add(ticket);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return HttpNotFound();
             }
 
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "DisplayName", ticket.AuthorId);
-            ViewBag.DeveloperId = new SelectList(db.Users, "Id", "DisplayName", ticket.DeveloperId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "AuthorId", ticket.ProjectId);
+            var UserHelper = new UserHelper();
+            var userAssignedProjectsDB = UserHelper.GetAllProjectsAssignedToUser(User.Identity.GetUserId());
+
+            if (!userAssignedProjectsDB.Any(proj => proj.Id == ticket.ProjectId))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (ModelState.IsValid)
+            {
+
+                ticket.Created = DateTime.Now;
+                ticket.AuthorId = User.Identity.GetUserId();
+                db.Tickets.Add(ticket);
+                db.SaveChanges();
+                return RedirectToAction("Index","Projects");
+            }
+
+    ;
             return View(ticket);
         }
 
