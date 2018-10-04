@@ -92,21 +92,31 @@ namespace BugTracker.Controllers
             userModel.DisplayName = userDB.DisplayName;
             userModel.Id = userDB.Id;
             var appRoles = roleManager.Roles.ToList();
-            //userModel.Roles = userManager.GetRoles(id);
+            userModel.Roles = userManager.GetRoles(id);
 
 
-            var userRolesIds = (from userRole in userDB.Roles
-                             join role in db.Roles on userRole.RoleId
-                             equals role.Id
-                             select role.Id).ToList();
-                                 
+            //var userRolesIds = (from userRole in userDB.Roles
+            //                 join role in db.Roles on userRole.RoleId
+            //                 equals role.Id
+            //                 select role.Id).ToList();
 
 
-            userModel.RolesList = new MultiSelectList(appRoles,"Id","Name", userRolesIds);
+
+            userModel.RolesList = new MultiSelectList(appRoles,"Name","Name", userModel.Roles);
             return View(userModel);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ManageUserRoles(string[] selectedRoles, string id)
+        {
+            var userDB = userManager.FindById(id);
+            var roles = userManager.GetRoles(id).ToArray();
 
+            userManager.RemoveFromRoles(id, roles);
+            userManager.AddToRoles(id, selectedRoles);
 
+            return RedirectToAction("Index");
+        }
 
         protected override void Dispose(bool disposing)
         {
