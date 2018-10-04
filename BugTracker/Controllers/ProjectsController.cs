@@ -74,6 +74,7 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.ProjectTypeId = new SelectList(db.ProjectTypes, "Id", "Type");
             return View(project);
         }
 
@@ -82,11 +83,14 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,AuthorId,Created,Updated,Name,Description")] Project project)
+        public ActionResult Edit([Bind(Include = "Id,ProjectTypeId,Name,Description")] Project project)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(project).State = EntityState.Modified;
+                var projectDB = db.Projects.FirstOrDefault(item => item.Id == project.Id);
+                projectDB.ProjectTypeId = project.ProjectTypeId;
+                projectDB.Name = project.Name;
+                projectDB.Description = project.Description;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
