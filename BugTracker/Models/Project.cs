@@ -19,6 +19,14 @@ namespace BugTracker.Models
                 {4,"<i class=\"fab fa-windows fa-5x\"></i>" },
                 {5,"<i class=\"fab fa-node fa-5x\"></i>" },
             };
+
+            TypeColor = new Dictionary<int, string>() {
+                {1,"danger" },
+                {2,"succes" },
+                {3,"primary" },
+                {4,"info" },
+                {5,"warning" },
+            };
         }
 
         public int Id { get; set; }
@@ -27,16 +35,13 @@ namespace BugTracker.Models
         public string AuthorId { get; set; }
         public virtual ApplicationUser Author { get; set; }
 
-        public virtual ICollection<ApplicationUser> AssignedDevelopers { get; set; }
 
         public int ProjectTypeId { get; set; }
         public virtual ProjectType ProjectType { get; set; }
+        //many-to-many relations
+        public virtual ICollection<ApplicationUser> AssignedDevelopers { get; set; }
 
-
-        public string TicketId { get; set; }
-        public virtual Ticket Ticket { get; set; }
-
-        public virtual ICollection<Ticket> OpenPtojectTickets { get; set; }
+        public virtual ICollection<Ticket> Tickets { get; set; }
 
         // local properties
         public DateTime Created { get; set; }
@@ -49,7 +54,7 @@ namespace BugTracker.Models
         public string Description { get; set; }
 
         public Dictionary<int,string> TypeCss { get; private set; }
-        
+        public Dictionary<int, string> TypeColor { get; private set; }
 
 
     }

@@ -20,34 +20,35 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary("", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
-            <h3>Assigned projects:</h3>
+            <h3 class="extra-pad-left">Assigned projects:</h3>
 
-            <div class="row">
+            <div class="row extra-pad">
                 @foreach (var item in Model.ProjectAssigned)
                 {
 
                     <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-primary">
+                        <div class="panel panel-@item.TypeColor[item.ProjectTypeId]">
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         @Html.Raw(item.TypeCss[item.ProjectTypeId])
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">26</div>
+                                        <div class="huge">@item.Tickets.Count</div>
                                         <div>Opened tickets</div>
                                     </div>
                                 </div>
                             </div>
                             <h4 class="text-center">@item.Name</h4>
-                            <a href="#">
+                            <a href=@Url.Action("Details","Projects",new { id = item.Id})>
+
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                     <div class="clearfix"></div>
                                 </div>
                             </a>
-                            <input checked type="checkbox" name="assign" value="@item.Id" />
+                            <input checked type="checkbox" name="assign" value="@item.Id" class="extra-mar-left extra-mar-top" />
                             <label for="assign">Unassign</label>
                         </div>
                     </div>
@@ -56,33 +57,33 @@
             <hr />
 
 
-            <h4>Assign new pojects to user:</h4>
-            <div class="row">
+            <h4 class="extra-pad-left">Assign new pojects to user:</h4>
+            <div class="row extra-pad">
                 @foreach (var item in Model.ProjectsNotAssigned)
                 {
 
                     <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-primary">
+                        <div class="panel panel-@item.TypeColor[item.ProjectTypeId]">
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         @Html.Raw(item.TypeCss[item.ProjectTypeId])
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">26</div>
+                                        <div class="huge">@item.Tickets.Count</div>
                                         <div>Opened tickets</div>
                                     </div>
                                 </div>
                             </div>
                             <h3 class="text-center">@item.Name</h3>
-                            <a href="#">
+                            <a href=@Url.Action("Details","Projects",new { id = item.Id})>
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                     <div class="clearfix"></div>
                                 </div>
                             </a>
-                            <input type="checkbox" name="assign" value="@item.Id" />
+                            <input type="checkbox" name="assign" value="@item.Id" class="extra-mar-left extra-mar-top" />
                             <label for="assign">Assign</label>
                         </div>
                     </div>
@@ -90,7 +91,7 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-8">
+                <div class="col-md-8 extra-mar-left">
                     <input type="submit" value="Change" class="btn btn-default" />
                 </div>
             </div>

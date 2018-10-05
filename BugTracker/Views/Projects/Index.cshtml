@@ -20,7 +20,7 @@
             {
 
                 <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
+                    <div class="panel panel-@item.TypeColor[item.ProjectTypeId]">
                         <div class="panel-heading">
                             <div class="row">
 
@@ -40,17 +40,17 @@
                                     }
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <div class="huge">26</div>
+                                        <div class="huge">@item.Tickets.Count</div>
                                         <div>Opened tickets</div>
                                     }
                                     @if (User.IsInRole("Developer"))
                                     {
-                                        <div class="huge">26</div>
+                                        <div class="huge">@item.Tickets.Count</div>
                                         <div>Opened tickets</div>
                                     }
                                     @if (User.IsInRole("Project Manager"))
                                     {
-                                        <div class="huge">26</div>
+                                        <div class="huge">@item.Tickets.Count</div>
                                         <div>Opened tickets</div>
                                     }
 

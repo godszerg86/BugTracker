@@ -1,5 +1,5 @@
 ﻿.checkbox {
-    padding-left:20px;
+    padding-left: 20px;
 }
 
 
@@ -9,6 +9,21 @@
 
 .table-btn {
     margin-top: 10px;
+}
 
+.extra-pad {
+    padding: 20px;
+}
+
+.extra-pad-left {
+    padding-left: 20px;
+}
+
+.extra-mar-left {
+    margin-left: 20px !important;
+}
+
+.extra-mar-top {
+    margin-top: 10px !important;
 }
 

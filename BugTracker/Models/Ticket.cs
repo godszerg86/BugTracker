@@ -10,8 +10,10 @@ namespace BugTracker.Models
         public int Id { get; set; }
 
         //many-to-manu relations
+
         public int ProjectId { get; set; }
         public virtual Project Project { get; set; }
+
 
         public string AuthorId { get; set; }
         public virtual ApplicationUser Author { get; set; }

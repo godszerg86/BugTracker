@@ -1,4 +1,7 @@
 ﻿@model BugTracker.Models.Project
+    @{ 
+        var ticket = Model.Tickets.ToArray();
+    }
 
 
 
@@ -11,27 +14,63 @@
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->
-    <div class="container">
-        <div class="row">
+    <div class="">
+        <div class="row extra-pad">
 
-            <h3>Author: @Model.Author.DisplayName</h3>
-            <h3>Created on: @Model.Created.ToString("dd-MM-yyyy")</h3>
+            <h4>Author: @Model.Author.DisplayName</h4>
+            <h4>Created on: @Model.Created.ToString("dd-MM-yyyy")</h4>
             @if (Model.Updated != null)
 
             {
-                <h3>Last update: @Model.Updated</h3>
+                <h4>Last update: @Model.Updated</h4>
             }
-            <h3>Project type: @Model.ProjectType.Type</h3>
+            <h4>Project type: @Model.ProjectType.Type</h4>
             <hr />
             <h4>Description:</h4>
             <p>@Model.Description</p>
+            <hr />
             <h4>Project opened tickets:</h4>
-            <ul>
-                @*@foreach (var ticket in Model)
-                {
 
-                }*@
-            </ul>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Project opened tickets:
+                        </div>
+                        <!-- .panel-heading -->
+                        <div class="panel-body">
+                            <div class="panel-group" id="accordion">
+                                @for (int i = 0; i < ticket.Count(); i++)
+                                {
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-@i">@ticket[i].Title <span class="pull-right">Created by @ticket[i].Author.DisplayName.  Date:  @ticket[i].Created.ToString("dd-MM-yyyy")</span></a>
+                                        </h4>
+                                    </div>
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                           Test
+                                        </h4>
+                                    </div>
+                                    <div id="collapse-@i" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            @ticket[i].Description
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+
+                            </div>
+                        </div>
+                        <!-- .panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
             <p>
                 @if (User.IsInRole("Project Manager") && User.Identity.IsAuthenticated)
                 {
