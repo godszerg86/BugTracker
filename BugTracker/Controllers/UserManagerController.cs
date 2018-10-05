@@ -15,18 +15,18 @@ namespace BugTracker.Controllers
 {
     public class UserManagerController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-        private UserManager<ApplicationUser> LocalUserManager { get; set; }
+        private ApplicationDbContext db { get; set; }
+        private UserHelper UserHelper { get; set; }
         public ICollection<UserListModel> userList { get; set; }
         public UserManagerController()
         {
-            LocalUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            db = new ApplicationDbContext();
+            UserHelper = new UserHelper(db);
         }
 
         // GET: UserManager
         public ActionResult Index()
         {
-            var UserHelper = new UserHelper();
             userList = new HashSet<UserListModel>();
             ICollection<ApplicationUser> usersDB = db.Users.ToList();
             //var userHelper = new UserHelper();
@@ -49,7 +49,6 @@ namespace BugTracker.Controllers
         //GET: ManageUser
         public ActionResult ManageUserAssignedProjects(string id)
         {
-            var UserHelper = new UserHelper();
             var userDB = UserHelper.GetUserById(id);
             UserListModel userModel = new UserListModel();
             userModel.DisplayName = userDB.DisplayName;
@@ -74,10 +73,8 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ManageUserAssignedProjects(int[] assign, string id)
         {
-            // WIERD STUFF GOING ON!
-            //var UserHelper = new UserHelper();
-            var userDB = LocalUserManager.FindById(id);
-            //ApplicationUser userDB = db.Users.FirstOrDefault(u => u.Id == id); // !!!!!!
+
+            var userDB = UserHelper.GetUserById(id);
             userDB.ProjectsManage.Clear();
             if (assign != null)
             {
@@ -89,7 +86,6 @@ namespace BugTracker.Controllers
                     userDB.ProjectsManage.Add(arrayProject);
                 }
             }
-            //db.Entry(userDB).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -97,7 +93,6 @@ namespace BugTracker.Controllers
 
         public ActionResult ManageUserRoles(string id)
         {
-            var UserHelper = new UserHelper();
             var userDB = UserHelper.GetUserById(id);
             UserListModel userModel = new UserListModel();
             userModel.DisplayName = userDB.DisplayName;
@@ -120,7 +115,6 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ManageUserRoles(string selectedRole, string id)
         {
-            var UserHelper = new UserHelper();
             var userDB = UserHelper.GetUserById(id);
             var roles = UserHelper.GetRoles(id).ToArray();
 

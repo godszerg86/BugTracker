@@ -7,18 +7,58 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
+using BugTracker.Models.Helpers;
 using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
     public class ProjectsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db { get; set; }
+        private UserHelper UserHelper { get; set; }
+
+        public ProjectsController ()
+        {
+            db = new ApplicationDbContext();
+            UserHelper = new UserHelper(db);
+
+        }
+
 
         // GET: Projects
         public ActionResult Index()
         {
-            return View(db.Projects.ToList());
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Submitter"))
+            {
+                var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+                return View(userDB.ProjectsManage.ToList());
+            }
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Developer"))
+            {
+                var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+                return View(userDB.ProjectsManage.ToList());
+            }
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Project Manager"))
+            {
+                return View(db.Projects.ToList());
+            }
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return View(db.Projects.ToList());
+            }
+
+            //Demo functionalitiy
+
+            //if (User.Identity.IsAuthenticated && User.IsInRole("Demo User"))
+            //{
+            //    return View(db.Projects.ToList());
+            //}
+
+            return View();
         }
 
         // GET: Projects/Details/5

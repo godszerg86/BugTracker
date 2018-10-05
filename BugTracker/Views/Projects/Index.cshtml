@@ -10,8 +10,12 @@
     </div>
     <!-- /.row -->
     <div class="row">
-        @if (User.Identity.IsAuthenticated)
+        @if (User.Identity.IsAuthenticated && Model != null)
         {
+            if (!Model.Any())
+            {
+                <h4>You have no projects assigned to you. Come back later.</h4>
+            }
             foreach (var item in Model)
             {
 
@@ -68,7 +72,8 @@
         }
         else
         {
-            <h4>For demo use of Bug Tracker App login.</h4>
+            <h4>For demo use of Bug Tracker App login with demo acccount</h4>
+            <h4>Or log in with your regular account</h4>
         }
 
     </div>

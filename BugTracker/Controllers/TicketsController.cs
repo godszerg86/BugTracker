@@ -40,6 +40,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Create
+        [Authorize(Roles = "Submitter")]
         public ActionResult Create(int projectId)
         {
             var ticketModel = new CreateTicketListModel();
@@ -61,7 +62,7 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
 
-            var UserHelper = new UserHelper();
+            var UserHelper = new UserHelper(db);
             var userAssignedProjectsDB = UserHelper.GetAllProjectsAssignedToUser(User.Identity.GetUserId());
 
             if (!userAssignedProjectsDB.Any(proj => proj.Id == ticket.ProjectId))

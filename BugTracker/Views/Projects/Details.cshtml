@@ -25,8 +25,19 @@
             <hr />
             <h4>Description:</h4>
             <p>@Model.Description</p>
+            <h4>Project opened tickets:</h4>
+            <ul>
+                @*@foreach (var ticket in Model)
+                {
+
+                }*@
+            </ul>
             <p>
-                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                @if (User.IsInRole("Project Manager") && User.Identity.IsAuthenticated)
+                {
+
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Id });
+                }
                 @Html.ActionLink("Back to List", "Index")
             </p>
 

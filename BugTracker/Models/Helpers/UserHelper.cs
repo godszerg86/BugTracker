@@ -9,12 +9,11 @@ namespace BugTracker.Models.Helpers
 {
     public class UserHelper
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
         private UserManager<ApplicationUser> UserManager { get; set; }
         private RoleManager<IdentityRole> RoleManager { get; set; }
 
 
-        public UserHelper()
+        public UserHelper(ApplicationDbContext db)
         {
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));

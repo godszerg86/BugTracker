@@ -46,6 +46,10 @@ namespace BugTracker.Migrations
                 roleManager.Create(new IdentityRole { Name = "Submitter" });
             }
 
+            if (!context.Roles.Any(r => r.Name == "Demo User"))
+            {
+                roleManager.Create(new IdentityRole { Name = "Demo User" });
+            }
 
             ApplicationUser adminUser = new ApplicationUser();
 

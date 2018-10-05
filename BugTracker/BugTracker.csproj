@@ -208,6 +208,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\classes\CreateTicketListModel.cs" />
     <Compile Include="Models\classes\UserListModel.cs" />
+    <Compile Include="Models\DemoProjects.cs" />
     <Compile Include="Models\Helpers\UserHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

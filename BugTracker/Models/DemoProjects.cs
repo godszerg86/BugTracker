@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace BugTracker.Models
 {
-    public class Project
+    public class DemoProjects
     {
-        public Project()
+
+
+        public DemoProjects()
         {
             AssignedDevelopers = new HashSet<ApplicationUser>();
             TypeCss = new Dictionary<int, string>() {
@@ -23,7 +24,7 @@ namespace BugTracker.Models
 
         public int Id { get; set; }
 
-        //foreign keys connections 
+        //foreign keys connections
         public string AuthorId { get; set; }
         public virtual ApplicationUser Author { get; set; }
 
@@ -32,25 +33,17 @@ namespace BugTracker.Models
         public int ProjectTypeId { get; set; }
         public virtual ProjectType ProjectType { get; set; }
 
-
-        public string TicketId { get; set; }
-        public virtual Ticket Ticket { get; set; }
-
-        public virtual ICollection<Ticket> OpenPtojectTickets { get; set; }
-
         // local properties
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
 
-        [Required(ErrorMessage ="Name field is required.")]
+        [Required(ErrorMessage = "Name field is required.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Description field is required.")]
         public string Description { get; set; }
 
-        public Dictionary<int,string> TypeCss { get; private set; }
-        
-
+        public Dictionary<int, string> TypeCss { get; private set; }
 
     }
 }
