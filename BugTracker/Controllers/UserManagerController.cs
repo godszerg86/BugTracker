@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -15,17 +16,17 @@ namespace BugTracker.Controllers
     public class UserManagerController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-       
+        private UserManager<ApplicationUser> LocalUserManager { get; set; }
         public ICollection<UserListModel> userList { get; set; }
-        public UserHelper UserHelper { get; set; }
-       public UserManagerController()
+        public UserManagerController()
         {
-             UserHelper = new UserHelper();
+            LocalUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
         }
+
         // GET: UserManager
         public ActionResult Index()
         {
-
+            var UserHelper = new UserHelper();
             userList = new HashSet<UserListModel>();
             ICollection<ApplicationUser> usersDB = db.Users.ToList();
             //var userHelper = new UserHelper();
@@ -48,6 +49,7 @@ namespace BugTracker.Controllers
         //GET: ManageUser
         public ActionResult ManageUserAssignedProjects(string id)
         {
+            var UserHelper = new UserHelper();
             var userDB = UserHelper.GetUserById(id);
             UserListModel userModel = new UserListModel();
             userModel.DisplayName = userDB.DisplayName;
@@ -55,9 +57,12 @@ namespace BugTracker.Controllers
 
             var projectsDB = db.Projects.ToList();
 
+
+
             foreach (var item in userModel.ProjectAssigned)
             {
-                projectsDB.Remove(item);
+                var proj = projectsDB.FirstOrDefault(p => p.Id == item.Id);
+                projectsDB.Remove(proj);
 
             }
 
@@ -69,7 +74,10 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ManageUserAssignedProjects(int[] assign, string id)
         {
-            var userDB = UserHelper.GetUserById(id);
+            // WIERD STUFF GOING ON!
+            //var UserHelper = new UserHelper();
+            var userDB = LocalUserManager.FindById(id);
+            //ApplicationUser userDB = db.Users.FirstOrDefault(u => u.Id == id); // !!!!!!
             userDB.ProjectsManage.Clear();
             if (assign != null)
             {
@@ -77,16 +85,19 @@ namespace BugTracker.Controllers
                 foreach (var item in assign)
                 {
                     var arrayProject = projectsDB.FirstOrDefault(proj => proj.Id == item);
+
                     userDB.ProjectsManage.Add(arrayProject);
                 }
             }
+            //db.Entry(userDB).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
 
-        public ActionResult ManageUserRoles (string id)
+        public ActionResult ManageUserRoles(string id)
         {
+            var UserHelper = new UserHelper();
             var userDB = UserHelper.GetUserById(id);
             UserListModel userModel = new UserListModel();
             userModel.DisplayName = userDB.DisplayName;
@@ -102,23 +113,23 @@ namespace BugTracker.Controllers
 
 
 
-            userModel.RolesList = new SelectList(appRoles,"Name","Name", userModel.Roles.FirstOrDefault());
+            userModel.RolesList = new SelectList(appRoles, "Name", "Name", userModel.Roles.FirstOrDefault());
             return View(userModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ManageUserRoles(string selectedRole, string id)
         {
+            var UserHelper = new UserHelper();
             var userDB = UserHelper.GetUserById(id);
             var roles = UserHelper.GetRoles(id).ToArray();
 
             UserHelper.RemoveFromRoles(id, roles);
             UserHelper.AddToRole(id, selectedRole);
-            
+
             //: Refresh authentication cookies so the roles are updated instantly
             var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             signInManager.SignIn(userDB, isPersistent: false, rememberBrowser: false);
-
             return RedirectToAction("Index");
         }
 
