@@ -21,11 +21,11 @@ namespace BugTracker.Models
             };
 
             TypeColor = new Dictionary<int, string>() {
-                {1,"danger" },
-                {2,"succes" },
-                {3,"primary" },
-                {4,"info" },
-                {5,"warning" },
+                {1,"angular" },
+                {2,"vuejs" },
+                {3,"react" },
+                {4,"asp" },
+                {5,"nodejs" },
             };
         }
 

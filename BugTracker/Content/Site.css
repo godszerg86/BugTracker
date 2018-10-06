@@ -27,3 +27,112 @@
     margin-top: 10px !important;
 }
 
+/*React app style*/
+
+
+.panel-react {
+    border-color: #61dafb;
+}
+
+
+    .panel-react > .panel-heading {
+        border-color: #61dafb;
+        color: white;
+        background-color: #61dafb;
+    }
+
+    .panel-react > a {
+        color: #337ab7;
+    }
+
+        .panel-react > a:hover {
+            color: #23527c;
+        }
+
+/*Angular app style*/
+.panel-angular {
+    border-color: #c30e2e;
+}
+
+
+    .panel-angular > .panel-heading {
+        border-color: #c30e2e;
+        color: white;
+        background-color: #c30e2e;
+    }
+
+    .panel-angular > a {
+        color: #337ab7;
+    }
+
+        .panel-angular > a:hover {
+            color: #23527c;
+        }
+
+
+/*Vue app style*/
+.panel-vuejs {
+    border-color: #4dba87;
+}
+
+
+    .panel-vuejs > .panel-heading {
+        border-color: #4dba87;
+        color: white;
+        background-color: #4dba87;
+    }
+
+    .panel-vuejs > a {
+        color: #337ab7;
+    }
+
+        .panel-vuejs > a:hover {
+            color: #23527c;
+        }
+
+
+/*Asp app style*/
+.panel-asp {
+    border-color: #60399e;
+}
+
+
+    .panel-asp > .panel-heading {
+        border-color: #60399e;
+        color: white;
+        background-color: #60399e;
+    }
+
+    .panel-asp > a {
+        color: #337ab7;
+    }
+
+        .panel-asp > a:hover {
+            color: #23527c;
+        }
+
+
+/*Nodejs app style*/
+.panel-nodejs {
+    border-color: #3c823b;
+}
+
+
+    .panel-nodejs > .panel-heading {
+        border-color: #3c823b;
+        color: white;
+        background-color: #3c823b;
+    }
+
+    .panel-nodejs > a {
+        color: #337ab7;
+    }
+
+        .panel-nodejs > a:hover {
+            color: #23527c;
+        }
+
+
+.panel-heading {
+    border-bottom: 0;
+}
