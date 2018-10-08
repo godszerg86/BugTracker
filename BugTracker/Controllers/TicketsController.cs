@@ -167,7 +167,7 @@ namespace BugTracker.Controllers
             viewModel.Developers = UserHelper.GetUsersInRole("Developer");
             if (ticket.Developer != null)
             {
-                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName", new { id = ticket.Developer.Id });
+                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName", ticket.Developer.Id );
             }
             else
             {
@@ -175,6 +175,19 @@ namespace BugTracker.Controllers
             }
             viewModel.ProjectId = ticket.ProjectId;
             return View(viewModel);
+        }
+
+
+        //POST: Assgin developer to ticjet
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignDeveloper([Bind(Include = "TicketId,SelectedDevId,ProjectId")] AssignTicketToDeveloperModel model)
+        {
+
+            var ticket = db.Tickets.Find(model.TicketId);
+            ticket.DeveloperId = model.SelectedDevId;
+            db.SaveChanges();
+            return RedirectToAction("Details","Projects",new { id = model.ProjectId});
         }
 
         protected override void Dispose(bool disposing)
