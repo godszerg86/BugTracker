@@ -136,3 +136,9 @@
 .panel-heading {
     border-bottom: 0;
 }
+
+
+.panel-links {
+    font-size: 14px;
+    color: #337ab7;
+}

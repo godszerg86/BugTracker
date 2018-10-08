@@ -15,7 +15,16 @@ namespace BugTracker.Controllers
 {
     public class TicketsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db { get; set; }
+        private UserHelper UserHelper { get; set; }
+
+        public TicketsController()
+        {
+            db = new ApplicationDbContext();
+            UserHelper = new UserHelper(db);
+
+        }
+
 
         // GET: Tickets
         public ActionResult Index()
@@ -52,7 +61,7 @@ namespace BugTracker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles ="Submitter")]
+        [Authorize(Roles = "Submitter")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,ProjectId,,Title,Description")] Ticket ticket)
         {
@@ -62,7 +71,7 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
 
-            var UserHelper = new UserHelper(db);
+
             var userAssignedProjectsDB = UserHelper.GetAllProjectsAssignedToUser(User.Identity.GetUserId());
 
             if (!userAssignedProjectsDB.Any(proj => proj.Id == ticket.ProjectId))
@@ -77,7 +86,7 @@ namespace BugTracker.Controllers
                 ticket.AuthorId = User.Identity.GetUserId();
                 db.Tickets.Add(ticket);
                 db.SaveChanges();
-                return RedirectToAction("Index","Projects");
+                return RedirectToAction("Index", "Projects");
             }
 
     ;
@@ -145,6 +154,27 @@ namespace BugTracker.Controllers
             db.Tickets.Remove(ticket);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+        //GET: Assign developer to the ticket
+        public ActionResult AssignDeveloper(int id)
+        {
+            var viewModel = new AssignTicketToDeveloperModel();
+            viewModel.TicketId = id;
+            var ticket = db.Tickets.FirstOrDefault(t => t.Id == id);
+            viewModel.TicketTitle = ticket.Title;
+            viewModel.Developers = UserHelper.GetUsersInRole("Developer");
+            if (ticket.Developer != null)
+            {
+                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName", new { id = ticket.Developer.Id });
+            }
+            else
+            {
+                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName");
+            }
+            viewModel.ProjectId = ticket.ProjectId;
+            return View(viewModel);
         }
 
         protected override void Dispose(bool disposing)

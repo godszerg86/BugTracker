@@ -19,10 +19,12 @@ namespace BugTracker.Models.Helpers
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
         }
 
+
         public List<string> GetRoles(string id)
         {
             return UserManager.GetRoles(id).ToList();
         }
+
 
         public ApplicationUser GetUserById(string id)
         {
@@ -30,23 +32,61 @@ namespace BugTracker.Models.Helpers
         }
 
 
-        public List<Project> GetAllProjectsAssignedToUser (string id)
+        public List<Project> GetAllProjectsAssignedToUser(string id)
         {
-           return this.GetUserById(id).ProjectsManage.ToList();
+            return this.GetUserById(id).ProjectsManage.ToList();
         }
+
 
         internal void RemoveFromRoles(string id, string[] roles)
         {
-            UserManager.RemoveFromRoles(id,roles);
+            UserManager.RemoveFromRoles(id, roles);
         }
+
 
         internal void AddToRole(string id, string selectedRole)
         {
-            UserManager.AddToRole(id, selectedRole);        }
+            UserManager.AddToRole(id, selectedRole);
+        }
+
 
         internal List<IdentityRole> GetAllAppRoles()
         {
-           return RoleManager.Roles.ToList();
+            return RoleManager.Roles.ToList();
+        }
+
+        public ICollection<ApplicationUser> GetUsersInRole(string roleName)
+        {
+            var resultList = new List<ApplicationUser>();
+            var List = UserManager.Users.ToList();
+            foreach (var user in List)
+            {
+                if (IsUserInRole(user.Id, roleName))
+                {
+
+                    resultList.Add(user);
+                }
+            }
+            return resultList;
+        }
+
+
+        public ICollection<ApplicationUser> GetUsersNotInRole(string roleName)
+        {
+            var resultList = new List<ApplicationUser>();
+            var List = UserManager.Users.ToList();
+            foreach (var user in List)
+            {
+                if (!IsUserInRole(user.Id, roleName))
+                    resultList.Add(user);
+            }
+            return resultList;
+        }
+
+
+        public bool IsUserInRole(string userId, string roleName)
+        {
+            return UserManager.IsInRole(userId, roleName);
         }
     }
 }
