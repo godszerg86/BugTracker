@@ -33,6 +33,16 @@ namespace BugTracker.Controllers
             return View(tickets.ToList());
         }
 
+        // GET: Tickets of current user
+        public ActionResult MyTickets()
+        {
+            string userID = User.Identity.GetUserId();
+            var tickets = db.Tickets.Where(t => t.AuthorId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
+            return View("Index", tickets.ToList());
+        }
+
+
+
         // GET: Tickets/Details/5
         public ActionResult Details(int? id)
         {
@@ -167,7 +177,7 @@ namespace BugTracker.Controllers
             viewModel.Developers = UserHelper.GetUsersInRole("Developer");
             if (ticket.Developer != null)
             {
-                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName", ticket.Developer.Id );
+                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName", ticket.Developer.Id);
             }
             else
             {
@@ -187,7 +197,7 @@ namespace BugTracker.Controllers
             var ticket = db.Tickets.Find(model.TicketId);
             ticket.DeveloperId = model.SelectedDevId;
             db.SaveChanges();
-            return RedirectToAction("Details","Projects",new { id = model.ProjectId});
+            return RedirectToAction("Details", "Projects", new { id = model.ProjectId });
         }
 
         protected override void Dispose(bool disposing)

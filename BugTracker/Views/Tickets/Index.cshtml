@@ -12,22 +12,17 @@
         <div class="row">
 
 
-            <p>
-                @Html.ActionLink("Create New", "Create")
-            </p>
+           
             <table class="table">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Author.DisplayName)
+                        Author name
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Developer.DisplayName)
+                        Assigned developer
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Project.AuthorId)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Title)
+                        Title
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Description)
@@ -50,9 +45,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Developer.DisplayName)
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Project.AuthorId)
-                        </td>
+                      
                         <td>
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
