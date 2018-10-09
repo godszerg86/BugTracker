@@ -37,10 +37,30 @@ namespace BugTracker.Controllers
         public ActionResult MyTickets()
         {
             string userID = User.Identity.GetUserId();
-            var tickets = db.Tickets.Where(t => t.AuthorId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
-            return View("Index", tickets.ToList());
+
+            if (User.IsInRole("Developer"))
+            {
+                var tickets = db.Tickets.Where(t => t.DeveloperId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
+                return View("Index", tickets.ToList());
+            }
+
+            if (User.IsInRole("Submitter"))
+            {
+
+                var tickets = db.Tickets.Where(t => t.AuthorId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
+                return View("Index", tickets.ToList());
+            }
+
+            return View("Index");
         }
 
+        public ActionResult MyProjectsTickets()
+        {
+            string userID = User.Identity.GetUserId();
+            var userDB = UserHelper.GetUserById(userID);
+            var tickets = db.Tickets.Where(t => t.Project.AssignedDevelopers.Any(u => u.Id == userID)).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
+            return View("Index", tickets.ToList());
+        }
 
 
         // GET: Tickets/Details/5
