@@ -2,7 +2,7 @@
 @using PagedList;
 @using PagedList.Mvc;
 
-@{ 
+@{
     var pagedList = (IPagedList)Model;
 }
 
@@ -29,7 +29,15 @@
                             Assigned developer
                         </th>
                         <th>
-                            Title
+                            @if (ViewBag.Sorted != null)
+                            {
+                                <a href=@Url.Action(ViewBag.Controller,new { sortedByTitle = "z-a" })><i class="fas fa-sort-alpha-down fa-fw"></i> Title</a>
+
+                            }
+                            else
+                            {
+                                <a href=@Url.Action(ViewBag.Controller,new { sortedByTitle = "a-z" })><i class="fas fa-sort-alpha-up fa-fw"></i> Title</a>
+                            }
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Description)

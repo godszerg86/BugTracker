@@ -29,17 +29,35 @@ namespace BugTracker.Controllers
 
 
         // GET: Tickets
-        public ActionResult Index(int? page, int? pageSizeIn)
+        public ActionResult Index(int? page, int? pageSizeIn, string sortedByTitle)
         {
+            ViewBag.Controller = "Index";
             int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
             int pageNumber = (page ?? 1);
-            var tickets = db.Tickets.Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+            List<Ticket> tickets;
+
+            if (sortedByTitle == "a-z")
+            {
+                tickets = db.Tickets.OrderBy(t => t.Title).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+                ViewBag.Sorted = "a-z";
+            }
+            else if (sortedByTitle == "z-a")
+            {
+                
+                tickets = db.Tickets.OrderByDescending(t => t.Title).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+            }
+            else
+            {
+               
+                tickets = db.Tickets.Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+            }
             return View(tickets.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Tickets of current user
         public ActionResult MyTickets(int? page, int? pageSizeIn)
         {
+            ViewBag.Controller = "MyTickets";
             string userID = User.Identity.GetUserId();
             int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
             int pageNumber = (page ?? 1);
@@ -61,6 +79,7 @@ namespace BugTracker.Controllers
 
         public ActionResult MyProjectsTickets(int? page, int? pageSizeIn)
         {
+            ViewBag.Controller = "MyProjectsTickets";
             string userID = User.Identity.GetUserId();
             int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
             int pageNumber = (page ?? 1);
@@ -159,7 +178,7 @@ namespace BugTracker.Controllers
                 ticketDB.Description = ticket.Description;
                 ticketDB.Updated = DateTime.Now;
                 db.SaveChanges();
-                return RedirectToAction("Index","Projects");
+                return RedirectToAction("Index", "Projects");
             }
             return View(ticket);
         }
