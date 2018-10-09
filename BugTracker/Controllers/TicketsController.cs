@@ -135,9 +135,6 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "DisplayName", ticket.AuthorId);
-            ViewBag.DeveloperId = new SelectList(db.Users, "Id", "DisplayName", ticket.DeveloperId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "AuthorId", ticket.ProjectId);
             return View(ticket);
         }
 
@@ -146,17 +143,17 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ProjectId,AuthorId,DeveloperId,Title,Description,Created,Updated")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,Title,Description")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ticket).State = EntityState.Modified;
+                var ticketDB = db.Tickets.FirstOrDefault(t => t.Id == ticket.Id);
+                ticketDB.Title = ticket.Title;
+                ticketDB.Description = ticket.Description;
+                ticketDB.Updated = DateTime.Now;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Projects");
             }
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "DisplayName", ticket.AuthorId);
-            ViewBag.DeveloperId = new SelectList(db.Users, "Id", "DisplayName", ticket.DeveloperId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "AuthorId", ticket.ProjectId);
             return View(ticket);
         }
 
