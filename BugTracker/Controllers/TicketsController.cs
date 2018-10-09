@@ -10,6 +10,8 @@ using BugTracker.Models;
 using BugTracker.Models.classes;
 using BugTracker.Models.Helpers;
 using Microsoft.AspNet.Identity;
+using PagedList;
+using PagedList.Mvc;
 
 namespace BugTracker.Controllers
 {
@@ -27,39 +29,44 @@ namespace BugTracker.Controllers
 
 
         // GET: Tickets
-        public ActionResult Index()
+        public ActionResult Index(int? page, int? pageSizeIn)
         {
-            var tickets = db.Tickets.Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
-            return View(tickets.ToList());
+            int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
+            var tickets = db.Tickets.Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+            return View(tickets.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Tickets of current user
-        public ActionResult MyTickets()
+        public ActionResult MyTickets(int? page, int? pageSizeIn)
         {
             string userID = User.Identity.GetUserId();
-
+            int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
             if (User.IsInRole("Developer"))
             {
-                var tickets = db.Tickets.Where(t => t.DeveloperId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
-                return View("Index", tickets.ToList());
+                var tickets = db.Tickets.Where(t => t.DeveloperId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+                return View("Index", tickets.ToPagedList(pageNumber, pageSize));
             }
 
             if (User.IsInRole("Submitter"))
             {
 
-                var tickets = db.Tickets.Where(t => t.AuthorId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
-                return View("Index", tickets.ToList());
+                var tickets = db.Tickets.Where(t => t.AuthorId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+                return View("Index", tickets.ToPagedList(pageNumber, pageSize));
             }
 
             return View("Index");
         }
 
-        public ActionResult MyProjectsTickets()
+        public ActionResult MyProjectsTickets(int? page, int? pageSizeIn)
         {
             string userID = User.Identity.GetUserId();
+            int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
             var userDB = UserHelper.GetUserById(userID);
-            var tickets = db.Tickets.Where(t => t.Project.AssignedDevelopers.Any(u => u.Id == userID)).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project);
-            return View("Index", tickets.ToList());
+            var tickets = db.Tickets.Where(t => t.Project.AssignedDevelopers.Any(u => u.Id == userID)).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+            return View("Index", tickets.ToPagedList(pageNumber, pageSize));
         }
 
 
