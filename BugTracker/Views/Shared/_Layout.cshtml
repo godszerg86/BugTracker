@@ -117,11 +117,17 @@
                     <li class="sidebar-search">
                         <div class="input-group custom-search-form">
                             <input type="text" class="form-control" placeholder="Search...">
+                            <select id="lunch" class="selectpicker form-control" data-live-search="true" title="Please select a lunch ...">
+                                <option value="@Url.Action("Index","Projects")">Projects</option>
+                                <option value="@Url.Action("Index","Tickets")">Tickets</option>
+                           
+                            </select>
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
+                                <button class="btn btn-default" type="button" style="height: 68px; margin-left: 0px;">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
+
                         </div>
                         <!-- /input-group -->
                     </li>

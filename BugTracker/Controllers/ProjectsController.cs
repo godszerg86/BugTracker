@@ -17,7 +17,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db { get; set; }
         private UserHelper UserHelper { get; set; }
 
-        public ProjectsController ()
+        public ProjectsController()
         {
             db = new ApplicationDbContext();
             UserHelper = new UserHelper(db);
@@ -26,30 +26,46 @@ namespace BugTracker.Controllers
 
 
         // GET: Projects
-        public ActionResult Index()
+        public ActionResult Index(string query)
         {
 
-            if (User.Identity.IsAuthenticated && User.IsInRole("Submitter"))
+            if ((User.Identity.IsAuthenticated && User.IsInRole("Submitter")) || (User.Identity.IsAuthenticated && User.IsInRole("Developer")))
             {
                 var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
-                return View(userDB.ProjectsManage.ToList());
+                if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query))
+                {
+                    return View(userDB.ProjectsManage.ToList());
+
+                }
+                else
+                {
+                    var tempList = userDB.ProjectsManage.Where(p => p.Name.Contains(query) || p.Description.Contains(query)).ToList();
+                    return View(tempList);
+                }
             }
 
-            if (User.Identity.IsAuthenticated && User.IsInRole("Developer"))
+            //if (User.Identity.IsAuthenticated && User.IsInRole("Developer"))
+            //{
+            //    var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+            //    return View(userDB.ProjectsManage.ToList());
+            //}
+
+            if ((User.Identity.IsAuthenticated && User.IsInRole("Project Manager")) || (User.Identity.IsAuthenticated && User.IsInRole("Admin")))
             {
-                var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
-                return View(userDB.ProjectsManage.ToList());
+                if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query))
+                {
+                    return View(db.Projects.ToList());
+                }
+                else
+                {
+                    return View(db.Projects.Where(p => p.Name.Contains(query) || p.Description.Contains(query)).ToList());
+                }
             }
 
-            if (User.Identity.IsAuthenticated && User.IsInRole("Project Manager"))
-            {
-                return View(db.Projects.ToList());
-            }
-
-            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                return View(db.Projects.ToList());
-            }
+            //if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            //{
+            //    return View(db.Projects.ToList());
+            //}
 
             //Demo functionalitiy
 
