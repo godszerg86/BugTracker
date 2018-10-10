@@ -32,34 +32,36 @@ namespace BugTracker.Controllers
         public ActionResult Index(int? page, int? pageSizeIn, string sortedByTitle, string query)
         {
             ViewBag.Controller = "Index";
-            int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
+            int pageSize = (pageSizeIn ?? 2); // display three blog posts at a time on this page
             int pageNumber = (page ?? 1);
             List<Ticket> tickets;
 
             if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query))
             {
                 tickets = db.Tickets.Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
-            } else
+            }
+            else
             {
                 tickets = db.Tickets.Where(
-                                            t =>t.Title.ToLower()
+                                            t => t.Title.ToLower()
                                             .Contains(query.ToLower()) ||
                                             t.Description.ToLower()
                                             .Contains(query.ToLower()))
                                             .Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+                ViewBag.searchText = query;
             }
 
             if (sortedByTitle == "a-z")
             {
-                tickets.OrderBy(t => t.Title);
                 ViewBag.Sorted = "a-z";
+                return View(tickets.OrderBy(t => t.Title).ToPagedList(pageNumber, pageSize));
             }
             else if (sortedByTitle == "z-a")
             {
-                
-                tickets.OrderByDescending(t => t.Title);
+                ViewBag.Sorted = "z-a";
+                return View(tickets.OrderByDescending(t => t.Title).ToPagedList(pageNumber, pageSize));
             }
-         
+
             return View(tickets.ToPagedList(pageNumber, pageSize));
         }
 

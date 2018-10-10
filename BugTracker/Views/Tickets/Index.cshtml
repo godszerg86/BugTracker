@@ -4,6 +4,7 @@
 
 @{
     var pagedList = (IPagedList)Model;
+    var currentPage = pagedList.PageNumber;
 }
 
 <div id="page-wrapper">
@@ -29,14 +30,14 @@
                             Assigned developer
                         </th>
                         <th>
-                            @if (ViewBag.Sorted != null)
+                            @if (ViewBag.Sorted == "a-z")
                             {
-                                <a href=@Url.Action(ViewBag.Controller,new { sortedByTitle = "z-a" })><i class="fas fa-sort-alpha-down fa-fw"></i> Title</a>
+                                <a href=@Url.Action(ViewBag.Controller,new {page = currentPage, sortedByTitle = "z-a", query = ViewBag.searchText})><i class="fas fa-sort-alpha-down fa-fw"></i> Title</a>
 
                             }
                             else
                             {
-                                <a href=@Url.Action(ViewBag.Controller,new { sortedByTitle = "a-z" })><i class="fas fa-sort-alpha-up fa-fw"></i> Title</a>
+                                <a href=@Url.Action(ViewBag.Controller,new {page = currentPage, sortedByTitle = "a-z", query = ViewBag.searchText})><i class="fas fa-sort-alpha-up fa-fw"></i> Title</a>
                             }
                         </th>
                         <th>
@@ -85,7 +86,7 @@
 
                 <nav aria-label="Page navigation" class="pagination_section">
                     Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of     @pagedList.PageCount
-                    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page }))
+                    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, sortedByTitle = ViewBag.Sorted, query = ViewBag.searchText }))
                 </nav>
             }
             else
