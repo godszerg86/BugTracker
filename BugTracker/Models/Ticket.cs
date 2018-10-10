@@ -21,6 +21,11 @@ namespace BugTracker.Models
         public string DeveloperId { get; set; }
         public virtual ApplicationUser Developer { get; set; }
 
+
+        public ICollection<TicketComment> Comments { get; set; }
+
+
+
         //local proprties
         public string Title { get; set; }
         public string Description { get; set; }
