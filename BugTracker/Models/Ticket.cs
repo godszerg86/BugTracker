@@ -22,7 +22,7 @@ namespace BugTracker.Models
         public virtual ApplicationUser Developer { get; set; }
 
 
-        public ICollection<TicketComment> Comments { get; set; }
+        public virtual ICollection<TicketComment> Comments { get; set; }
 
 
 

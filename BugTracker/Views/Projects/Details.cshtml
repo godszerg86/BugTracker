@@ -1,7 +1,7 @@
 ﻿@model BugTracker.Models.Project
-    @{ 
-        var ticket = Model.Tickets.ToArray();
-    }
+@{
+    var ticket = Model.Tickets.ToArray();
+}
 
 
 
@@ -43,26 +43,28 @@
                                 @for (int i = 0; i < ticket.Count(); i++)
                                 {
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-@i">@ticket[i].Title <span class="pull-right">Created by @ticket[i].Author.DisplayName.  Date:  @ticket[i].Created.ToString("dd-MM-yyyy")</span></a>
-                                        </h4>
-                                    </div>
-                                    <div class="panel-heading">
-                                        <h6 class="panel-title panel-links">
-                                            <a href=@Url.Action("Details","Tickets",new { id = ticket[i].Id }) class="ticket-link"><i class="fas fa-info-circle fa-fw"></i> Details </a>
-                                            <a href=@Url.Action("Edit","Tickets",new { id = ticket[i].Id }) class="ticket-link"><i class="fas fa-edit fa-fw"></i> Edit </a>
-                                            <a href=@Url.Action("AssignDeveloper","Tickets",new { id = ticket[i].Id }) class="ticket-link"><i class="fas fa-plus-circle fa-fw"></i> Assign developer </a>
-                                            <a href=@Url.Action("ChangeStatus","Tickets",new { id = ticket[i].Id }) class="ticket-link"><i class="fas fa-clipboard-check fa-fw"></i> Change status</a>
-                                        </h6>
-                                    </div>
-                                    <div id="collapse-@i" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            @ticket[i].Description
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse-@i">@ticket[i].Title <span class="pull-right">Created by @ticket[i].Author.DisplayName.  Date:  @ticket[i].Created.ToString("dd-MM-yyyy")</span></a>
+                                            </h4>
+                                        </div>
+                                        <div class="panel-heading">
+                                            <h6 class="panel-title panel-links">
+                                                <a href=@Url.Action("Details","Tickets",new { id = ticket[i].Id }) class="ticket-link pull-right"><i class="fas fa-info-circle fa-fw extra-pad-left-sm"></i> Details</a>
+                                                <a href=@Url.Action("Edit","Tickets",new { id = ticket[i].Id }) class="ticket-link pull-right extra-pad-left-sm"><i class="fas fa-edit fa-fw"></i> Edit  |</a>
+                                                <a href=@Url.Action("Delete","Tickets",new { id = ticket[i].Id }) class="ticket-link pull-right extra-pad-left-sm"><i class="fas fa-trash-alt fa-fw"></i> Delete  |</a>
+                                                <a href=@Url.Action("AssignDeveloper","Tickets",new { id = ticket[i].Id }) class="ticket-link pull-right extra-pad-left-sm"><i class="fas fa-plus-circle fa-fw"></i> Assign developer  |</a>
+                                                <a href=@Url.Action("ChangeStatus","Tickets",new { id = ticket[i].Id }) class="ticket-link pull-right extra-pad-left-sm"><i class="fas fa-clipboard-check fa-fw"></i> Change status  |</a>
+                                                <a href=@Url.Action("Details","Tickets",new { id = ticket[i].Id }) class="ticket-link"><i class="fas fa-comment fa-fw"></i> Comments (@ticket[i].Comments.Count)</a>
+                                            </h6>
+                                        </div>
+                                        <div id="collapse-@i" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                @ticket[i].Description
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 }
 
                             </div>
