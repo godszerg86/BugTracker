@@ -39,7 +39,7 @@ namespace BugTracker.Controllers
                 }
                 else
                 {
-                    var tempList = userDB.ProjectsManage.Where(p => p.Name.Contains(query) || p.Description.Contains(query)).ToList();
+                    var tempList = userDB.ProjectsManage.Where(p => p.Name.ToLower().Contains(query.ToLower()) || p.Description.ToLower().Contains(query.ToLower())).ToList();
                     return View(tempList);
                 }
             }
@@ -58,7 +58,7 @@ namespace BugTracker.Controllers
                 }
                 else
                 {
-                    return View(db.Projects.Where(p => p.Name.Contains(query) || p.Description.Contains(query)).ToList());
+                    return View(db.Projects.Where(p => p.Name.ToLower().Contains(query.ToLower()) || p.Description.ToLower().Contains(query.ToLower())).ToList());
                 }
             }
 
