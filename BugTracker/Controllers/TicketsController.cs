@@ -29,28 +29,37 @@ namespace BugTracker.Controllers
 
 
         // GET: Tickets
-        public ActionResult Index(int? page, int? pageSizeIn, string sortedByTitle)
+        public ActionResult Index(int? page, int? pageSizeIn, string sortedByTitle, string query)
         {
             ViewBag.Controller = "Index";
             int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
             int pageNumber = (page ?? 1);
             List<Ticket> tickets;
 
+            if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query))
+            {
+                tickets = db.Tickets.Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+            } else
+            {
+                tickets = db.Tickets.Where(
+                                            t =>t.Title.ToLower()
+                                            .Contains(query.ToLower()) ||
+                                            t.Description.ToLower()
+                                            .Contains(query.ToLower()))
+                                            .Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+            }
+
             if (sortedByTitle == "a-z")
             {
-                tickets = db.Tickets.OrderBy(t => t.Title).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+                tickets.OrderBy(t => t.Title);
                 ViewBag.Sorted = "a-z";
             }
             else if (sortedByTitle == "z-a")
             {
                 
-                tickets = db.Tickets.OrderByDescending(t => t.Title).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
+                tickets.OrderByDescending(t => t.Title);
             }
-            else
-            {
-               
-                tickets = db.Tickets.Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
-            }
+         
             return View(tickets.ToPagedList(pageNumber, pageSize));
         }
 
