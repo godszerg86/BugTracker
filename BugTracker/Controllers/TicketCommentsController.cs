@@ -7,14 +7,22 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
+using BugTracker.Models.Helpers;
 using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
     public class TicketCommentsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db { get; set; }
 
+        private UserHelper UserHelper { get; set; }
+
+        public TicketCommentsController()
+        {
+            db = new ApplicationDbContext();
+            UserHelper = new UserHelper(db);
+        }
         // GET: TicketComments
         public ActionResult Index()
         {
@@ -50,18 +58,32 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,Body")] TicketComment ticketComment)
+        public ActionResult Create([Bind(Include = "Id,TicketId,Body")] TicketComment ticketComment, int ProjectId)
         {
             if (ModelState.IsValid)
             {
-                ticketComment.Created = DateTime.Now;
-                ticketComment.AuthorId = User.Identity.GetUserId();
-                db.TicketComments.Add(ticketComment);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+                var ticketDb = db.Tickets.FirstOrDefault(t => t.Id == ticketComment.TicketId);
+
+                if ((User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    || (User.Identity.IsAuthenticated && User.IsInRole("Project Manager") && userDB.ProjectsManage.Any(p => p.Id == ProjectId))
+                    || (User.Identity.IsAuthenticated && User.IsInRole("Submitter") && ticketDb.AuthorId == userDB.Id)
+                    || (User.Identity.IsAuthenticated && User.IsInRole("Developer") && ticketDb.Developer.Id == userDB.Id))
+                {
+
+                    ticketComment.Created = DateTime.Now;
+                    ticketComment.AuthorId = User.Identity.GetUserId();
+                    db.TicketComments.Add(ticketComment);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
+
+                }
+
+                return View("NoAccess", ticketComment.TicketId);
+
             }
 
-            return View(ticketComment);
+            return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
         }
 
         // GET: TicketComments/Edit/5
