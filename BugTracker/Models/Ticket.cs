@@ -23,7 +23,7 @@ namespace BugTracker.Models
 
 
         public virtual ICollection<TicketComment> Comments { get; set; }
-
+        public virtual ICollection<TicketAttachment> Attachments { get; set; }
 
 
         //local proprties
