@@ -130,8 +130,8 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Submitter")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,,Title,Description")] Ticket ticket)
-        {
+        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description")] Ticket ticket, TicketAttachment ticketAttachment)
+        { //TODO:
             var projectDB = db.Projects.Find(ticket.ProjectId);
             if (projectDB == null)
             {
