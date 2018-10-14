@@ -149,12 +149,21 @@
                                 @if (User.IsInRole("Developer") && User.Identity.IsAuthenticated)
                                 {
                                     <li>
-                                        <a href=@Url.Action("MyTickets","Tickets")><i class="far fa-dot-circle fa-fw"></i> Your tickets</a>
+                                        <a href=@Url.Action("MyTickets","Tickets")><i class="far fa-dot-circle fa-fw"></i> Tickets assigned to you</a>
                                     </li>
                                     <li>
-                                        <a href=@Url.Action("MyProjectsTickets","Tickets")><i class="far fa-dot-circle fa-fw"></i> Tickets on my projects</a>
+                                        <a href=@Url.Action("MyProjectsTickets","Tickets")><i class="far fa-dot-circle fa-fw"></i> Tickets on your projects</a>
                                     </li>
                                 }
+
+                                @if (User.IsInRole("Project Manager") && User.Identity.IsAuthenticated)
+                                {
+                                   
+                                    <li>
+                                        <a href=@Url.Action("MyProjectsTickets","Tickets")><i class="far fa-dot-circle fa-fw"></i> Tickets on your projects</a>
+                                    </li>
+                                }
+
 
                                 <li>
                                     <a href=@Url.Action("Index", "Tickets")><i class="far fa-dot-circle fa-fw"></i> All tickets</a>

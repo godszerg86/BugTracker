@@ -26,6 +26,7 @@ namespace BugTracker.Controllers
 
 
         // GET: Projects
+        [Authorize]
         public ActionResult Index(string query)
         {
 

@@ -29,6 +29,7 @@ namespace BugTracker.Controllers
 
 
         // GET: Tickets
+        [Authorize]
         public ActionResult Index(int? page, int? pageSizeIn, string sortedByTitle, string query)
         {
             ViewBag.Controller = "Index";
@@ -66,6 +67,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets of current user
+        [Authorize(Roles = "Submitter,Developer")]
         public ActionResult MyTickets(int? page, int? pageSizeIn)
         {
             ViewBag.Controller = "MyTickets";
@@ -85,18 +87,34 @@ namespace BugTracker.Controllers
                 return View("Index", tickets.ToPagedList(pageNumber, pageSize));
             }
 
-            return View("Index");
+            return View("NoAccess");
         }
-
+        [Authorize(Roles = "Project Manager,Developer")]
         public ActionResult MyProjectsTickets(int? page, int? pageSizeIn)
         {
             ViewBag.Controller = "MyProjectsTickets";
-            string userID = User.Identity.GetUserId();
+
             int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
             int pageNumber = (page ?? 1);
-            var userDB = UserHelper.GetUserById(userID);
-            var tickets = db.Tickets.Where(t => t.Project.AssignedDevelopers.Any(u => u.Id == userID)).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
-            return View("Index", tickets.ToPagedList(pageNumber, pageSize));
+
+
+            if ((User.IsInRole("Project Manager") && User.Identity.IsAuthenticated)
+                || (User.IsInRole("Developer") && User.Identity.IsAuthenticated))
+            {
+                var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+                var projectsManageDB = userDB.ProjectsManage.ToList();
+                List<Ticket> tickets = new List<Ticket>();
+                foreach (var proj in projectsManageDB)
+                {
+                    foreach (var ticket in proj.Tickets)
+                    {
+                        tickets.Add(ticket);
+                    }
+                }
+                return View("Index", tickets.ToPagedList(pageNumber, pageSize));
+            }
+
+            return View("NoAccess");
         }
 
 
@@ -130,8 +148,9 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Submitter")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description")] Ticket ticket, TicketAttachment ticketAttachment)
+        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileName,FileDescription")] Ticket ticket, TicketAttachment ticketAttachments)
         { //TODO:
+
             var projectDB = db.Projects.Find(ticket.ProjectId);
             if (projectDB == null)
             {
@@ -156,11 +175,13 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Index", "Projects");
             }
 
-    ;
-            return View(ticket);
+            var modelTicket = new CreateTicketListModel();
+            modelTicket.ProjectId = ticket.ProjectId;
+            return View(modelTicket);
         }
 
         // GET: Tickets/Edit/5
+        [Authorize(Roles = "Prject Manager,Developer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -172,7 +193,16 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
-            return View(ticket);
+            var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+            if (
+                (userDB.ProjectsManage.Any(p => p.Id == ticket.ProjectId) && User.IsInRole("Project Manager"))
+                || ((ticket.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
+                )
+            {
+
+                return View(ticket);
+            }
+            return View("NoAccess");
         }
 
         // POST: Tickets/Edit/5
@@ -180,18 +210,29 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Prject Manager,Developer")]
         public ActionResult Edit([Bind(Include = "Id,Title,Description")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+
                 var ticketDB = db.Tickets.FirstOrDefault(t => t.Id == ticket.Id);
-                ticketDB.Title = ticket.Title;
-                ticketDB.Description = ticket.Description;
-                ticketDB.Updated = DateTime.Now;
-                db.SaveChanges();
-                return RedirectToAction("Index", "Projects");
+                var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+
+                if (
+                    (userDB.ProjectsManage.Any(p => p.Id == ticket.ProjectId) && User.IsInRole("Project Manager"))
+                    || ((ticket.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
+                    )
+                {
+
+                    ticketDB.Title = ticket.Title;
+                    ticketDB.Description = ticket.Description;
+                    ticketDB.Updated = DateTime.Now;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Projects");
+                }
             }
-            return View(ticket);
+            return View("NoAccess");
         }
 
         // GET: Tickets/Delete/5
@@ -222,6 +263,7 @@ namespace BugTracker.Controllers
 
 
         //GET: Assign developer to the ticket
+        [Authorize(Roles = "Prject Manager")]
         public ActionResult AssignDeveloper(int id)
         {
             var viewModel = new AssignTicketToDeveloperModel();
@@ -245,6 +287,7 @@ namespace BugTracker.Controllers
         //POST: Assgin developer to ticjet
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Prject Manager")]
         public ActionResult AssignDeveloper([Bind(Include = "TicketId,SelectedDevId,ProjectId")] AssignTicketToDeveloperModel model)
         {
 

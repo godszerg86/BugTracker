@@ -468,6 +468,7 @@
     <Content Include="Views\TicketComments\Edit.cshtml" />
     <Content Include="Views\TicketComments\Index.cshtml" />
     <Content Include="Views\TicketComments\NoAccess.cshtml" />
+    <Content Include="Views\Tickets\NoAccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
