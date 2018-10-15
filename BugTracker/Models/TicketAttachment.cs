@@ -24,12 +24,5 @@ namespace BugTracker.Models
         public string Description { get; set; }
 
 
-        [NotMapped]
-        public HttpPostedFileBase[] FileBase { get; set; }
-        [NotMapped]
-        public string[] FileName { get; set; }
-        [NotMapped]
-        public string[] FileDescription { get; set; }
-
     }
 }

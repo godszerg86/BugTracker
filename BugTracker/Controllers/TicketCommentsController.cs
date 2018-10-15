@@ -56,6 +56,7 @@ namespace BugTracker.Controllers
         // POST: TicketComments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles ="Admin,Project Manager,Submitter,Developer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,TicketId,Body")] TicketComment ticketComment, int ProjectId)

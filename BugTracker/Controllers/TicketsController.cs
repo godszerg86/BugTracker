@@ -148,7 +148,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Submitter")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileName,FileDescription")] Ticket ticket, TicketAttachment ticketAttachments)
+        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileName,FileDescription")] Ticket ticket, List<TicketAttachmentViewModel> ticketAttachments)
         { //TODO:
 
             var projectDB = db.Projects.Find(ticket.ProjectId);
