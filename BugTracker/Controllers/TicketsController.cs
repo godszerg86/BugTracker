@@ -266,21 +266,33 @@ namespace BugTracker.Controllers
         [Authorize(Roles = "Prject Manager")]
         public ActionResult AssignDeveloper(int id)
         {
-            var viewModel = new AssignTicketToDeveloperModel();
-            viewModel.TicketId = id;
+
             var ticket = db.Tickets.FirstOrDefault(t => t.Id == id);
-            viewModel.TicketTitle = ticket.Title;
-            viewModel.Developers = UserHelper.GetUsersInRole("Developer");
-            if (ticket.Developer != null)
+            if (ticket == null)
             {
-                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName", ticket.Developer.Id);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            else
+
+            var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
+
+            if (userDB.ProjectsManage.Any(p => p.Id == ticket.ProjectId) && User.IsInRole("Project Manager"))
             {
-                viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName");
+                var viewModel = new AssignTicketToDeveloperModel();
+                viewModel.TicketId = id;
+                viewModel.TicketTitle = ticket.Title;
+                viewModel.Developers = UserHelper.GetUsersInRole("Developer");
+                if (ticket.Developer != null)
+                {
+                    viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName", ticket.Developer.Id);
+                }
+                else
+                {
+                    viewModel.DevList = new SelectList(viewModel.Developers, "Id", "DisplayName");
+                }
+                viewModel.ProjectId = ticket.ProjectId;
+                return View(viewModel);
             }
-            viewModel.ProjectId = ticket.ProjectId;
-            return View(viewModel);
+            return View("NoAccess");
         }
 
 
@@ -290,12 +302,23 @@ namespace BugTracker.Controllers
         [Authorize(Roles = "Prject Manager")]
         public ActionResult AssignDeveloper([Bind(Include = "TicketId,SelectedDevId,ProjectId")] AssignTicketToDeveloperModel model)
         {
+            var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
 
-            var ticket = db.Tickets.Find(model.TicketId);
-            ticket.DeveloperId = model.SelectedDevId;
-            db.SaveChanges();
-            return RedirectToAction("Details", "Projects", new { id = model.ProjectId });
+            if (userDB.ProjectsManage.Any(p => p.Id == model.ProjectId) && User.IsInRole("Project Manager"))
+            {
+                var ticket = db.Tickets.Find(model.TicketId);
+                if (ticket == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                ticket.DeveloperId = model.SelectedDevId;
+                db.SaveChanges();
+                return RedirectToAction("Details", "Projects", new { id = model.ProjectId });
+            }
+            return View("NoAccess");
         }
+
+
 
         protected override void Dispose(bool disposing)
         {
