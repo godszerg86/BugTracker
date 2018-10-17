@@ -70,7 +70,12 @@
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.Attachments)
+                        <ul class="list-group">
+                            @foreach (var item in Model.Attachments)
+                            {
+                                <li class="list-group-item"><a href="@item.FilePath">@item.Name</a></li>
+                            }
+                        </ul>
                     </dd>
                 </dl>
             </div>
