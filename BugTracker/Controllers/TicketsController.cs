@@ -168,6 +168,7 @@ namespace BugTracker.Controllers
 
             if (ModelState.IsValid)
             {
+                var dateTimeNow = DateTime.Now;
                 if (ticketAttachments != null)
                 {
                     foreach (var attach in ticketAttachments)
@@ -177,7 +178,7 @@ namespace BugTracker.Controllers
 
                             var attachmentDB = new TicketAttachment();
                             attachmentDB.AuthorId = User.Identity.GetUserId();
-                            attachmentDB.Created = DateTime.Now;
+                            attachmentDB.Created = dateTimeNow;
                             attachmentDB.Description = attach.FileDescription;
                             attachmentDB.TicketId = ticket.Id;
                             var hash = attach.GetHashCode();
@@ -197,7 +198,7 @@ namespace BugTracker.Controllers
                     }
                 }
 
-                ticket.Created = DateTime.Now;
+                ticket.Created = dateTimeNow;
                 ticket.AuthorId = User.Identity.GetUserId();
                 db.Tickets.Add(ticket);
                 db.SaveChanges();
@@ -210,7 +211,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Edit/5
-        [Authorize(Roles = "Prject Manager,Developer")]
+        [Authorize(Roles = "Project Manager,Developer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -239,30 +240,70 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Prject Manager,Developer")]
+        [Authorize(Roles = "Project Manager,Developer")]
         public ActionResult Edit([Bind(Include = "Id,Title,Description")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-
+                var dateTimeNow = DateTime.Now;
                 var ticketDB = db.Tickets.FirstOrDefault(t => t.Id == ticket.Id);
                 var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
 
                 if (
-                    (userDB.ProjectsManage.Any(p => p.Id == ticket.ProjectId) && User.IsInRole("Project Manager"))
-                    || ((ticket.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
+                    (userDB.ProjectsManage.Any(p => p.Id == ticketDB.ProjectId) && User.IsInRole("Project Manager"))
+                    || ((ticketDB.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
                     )
                 {
 
+                    var changes = new List<TicketHistory>();
+
                     ticketDB.Title = ticket.Title;
                     ticketDB.Description = ticket.Description;
-                    ticketDB.Updated = DateTime.Now;
+                    ticketDB.Updated = dateTimeNow;
+
+                    var originalValues = db.Entry(ticketDB).OriginalValues;
+                    var currentValues = db.Entry(ticketDB).CurrentValues;
+
+                    foreach (var property in originalValues.PropertyNames)
+                    {
+                        var originalValue = originalValues[property]?.ToString();
+                        var currentValue = currentValues[property]?.ToString();
+
+                        if (originalValue != currentValue)
+                        {
+                            var history = new TicketHistory();
+                            history.Changed = dateTimeNow;
+                            //history.NewValue = GetValueFromKey(property, currentValue);
+                            //history.OldValue = GetValueFromKey(property, originalValue);
+                            history.NewValue = currentValue;
+                            history.OldValue = originalValue;
+
+                            history.Property = property;
+                            history.TicketId = ticketDB.Id;
+                            history.UserId = User.Identity.GetUserId();
+                            changes.Add(history);
+                        }
+                    }
+
+                    db.TicketHistory.AddRange(changes);
+
                     db.SaveChanges();
                     return RedirectToAction("Index", "Projects");
                 }
             }
             return View("NoAccess");
         }
+
+
+        private string GetValueFromKey(string propertyName, string key)
+        {
+            if (propertyName == "TicketTypeId")
+            {
+                //return db.TicketTypes.Find(Convert.ToInt32(key)).Name;
+            }
+            return key;
+        }
+
 
         // GET: Tickets/Delete/5
         public ActionResult Delete(int? id)
@@ -292,7 +333,7 @@ namespace BugTracker.Controllers
 
 
         //GET: Assign developer to the ticket
-        [Authorize(Roles = "Prject Manager")]
+        [Authorize(Roles = "Project Manager")]
         public ActionResult AssignDeveloper(int id)
         {
 
@@ -328,7 +369,7 @@ namespace BugTracker.Controllers
         //POST: Assgin developer to ticjet
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Prject Manager")]
+        [Authorize(Roles = "Project Manager")]
         public ActionResult AssignDeveloper([Bind(Include = "TicketId,SelectedDevId,ProjectId")] AssignTicketToDeveloperModel model)
         {
             var userDB = UserHelper.GetUserById(User.Identity.GetUserId());

@@ -81,6 +81,7 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
+                var dateTimeNow = DateTime.Now;
                 var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
                 var ticketDB = db.Tickets.FirstOrDefault(t => t.Id == TicketId);
 
@@ -97,7 +98,7 @@ namespace BugTracker.Controllers
 
                             var attachmentDB = new TicketAttachment();
                             attachmentDB.AuthorId = User.Identity.GetUserId();
-                            attachmentDB.Created = DateTime.Now;
+                            attachmentDB.Created = dateTimeNow;
                             attachmentDB.Description = attach.FileDescription;
                             attachmentDB.TicketId = TicketId;
                             var hash = attach.GetHashCode();

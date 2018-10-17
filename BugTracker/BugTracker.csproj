@@ -228,6 +228,7 @@
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketAttachment.cs" />
     <Compile Include="Models\TicketComment.cs" />
+    <Compile Include="Models\TicketHistory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -404,6 +405,7 @@
     <Content Include="Content\Template\vendor\font-awesome\scss\_spinning.scss" />
     <Content Include="Content\Template\vendor\font-awesome\scss\_stacked.scss" />
     <Content Include="Content\Template\vendor\font-awesome\scss\_variables.scss" />
+    <Content Include="personal.config" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\fileUpload.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

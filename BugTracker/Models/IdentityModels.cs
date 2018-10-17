@@ -33,6 +33,8 @@ namespace BugTracker.Models
         [InverseProperty("Author")]
         public virtual ICollection<Ticket> CreatedTickets { get; set; }
 
+        public virtual ICollection<TicketHistory> Histories { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -63,5 +65,6 @@ namespace BugTracker.Models
 
         public System.Data.Entity.DbSet<BugTracker.Models.TicketComment> TicketComments { get; set; }
         public DbSet<TicketAttachment> TicketAttachments { get; set; }
+        public DbSet<TicketHistory> TicketHistory { get; set; }
     }
 }

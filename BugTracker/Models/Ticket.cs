@@ -9,6 +9,13 @@ namespace BugTracker.Models
 {
     public class Ticket
     {
+
+        public Ticket()
+        {
+            Attachments = new HashSet<TicketAttachment>();
+            Comments = new HashSet<TicketComment>();
+            Histories = new HashSet<TicketHistory>();
+        }
         public int Id { get; set; }
 
         //many-to-manu relations
@@ -29,6 +36,7 @@ namespace BugTracker.Models
 
         public virtual ICollection<TicketComment> Comments { get; set; }
         public virtual ICollection<TicketAttachment> Attachments { get; set; }
+        public virtual ICollection<TicketHistory> Histories { get; set; }
 
 
         //local proprties
