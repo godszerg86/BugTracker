@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -148,7 +149,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Submitter")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileName,FileDescription")] Ticket ticket, List<TicketAttachmentViewModel> ticketAttachments)
+        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileDescription")] Ticket ticket, List<TicketAttachmentViewModel> ticketAttachments)
         { //TODO:
 
             var projectDB = db.Projects.Find(ticket.ProjectId);
@@ -167,6 +168,34 @@ namespace BugTracker.Controllers
 
             if (ModelState.IsValid)
             {
+                if (ticketAttachments != null)
+                {
+                    foreach (var attach in ticketAttachments)
+                    {
+                        if (attach.FileBase != null)
+                        {
+
+                            var attachmentDB = new TicketAttachment();
+                            attachmentDB.AuthorId = User.Identity.GetUserId();
+                            attachmentDB.Created = DateTime.Now;
+                            attachmentDB.Description = attach.FileDescription;
+                            attachmentDB.TicketId = ticket.Id;
+                            var hash = attach.GetHashCode();
+                            attachmentDB.Name = SlugConverter.URLFriendly(Path.GetFileNameWithoutExtension(attach.FileBase.FileName)) + "-" + hash.ToString() + Path.GetExtension(attach.FileBase.FileName);
+                            var content = Server.MapPath("~/uploads/tickets/");
+                            var path = Path.Combine(content, Convert.ToString(ticket.Id));
+                            Directory.CreateDirectory(path);
+
+                            attach.FileBase.SaveAs(Path.Combine(Server.MapPath("~/uploads/tickets/" + ticket.Id + "/"), attachmentDB.Name));
+                            attachmentDB.FilePath = "/uploads/tickets/" + ticket.Id + "/" + attachmentDB.Name;
+                            db.TicketAttachments.Add(attachmentDB);
+                        }
+                        else
+                        {
+                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        }
+                    }
+                }
 
                 ticket.Created = DateTime.Now;
                 ticket.AuthorId = User.Identity.GetUserId();

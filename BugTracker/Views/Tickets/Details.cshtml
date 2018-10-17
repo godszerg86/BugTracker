@@ -65,12 +65,19 @@
                     <dd>
                         @Html.DisplayFor(model => model.Updated)
                     </dd>
+                    <dt>
+                        Ticket attachments:
+                    </dt>
 
+                    <dd>
+                        @Html.DisplayFor(model => model.Attachments)
+                    </dd>
                 </dl>
             </div>
             <p>
+                @Html.ActionLink("Back to project details", "Details", "Projects", new { id = Model.ProjectId }, null) |
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                @Html.ActionLink("Back to project details", "Details", "Projects", new { id = Model.ProjectId }, null)
+                @Html.ActionLink("Add attachment", "Create", "TicketAttachments", new { ticketId = Model.Id, projectId = Model.ProjectId }, null) 
             </p>
         </div>
         <hr />

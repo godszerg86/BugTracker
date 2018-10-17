@@ -11,9 +11,12 @@ namespace BugTracker.Models
     {
         public int Id { get; set; }
 
-        //one-to-many
+        //relations
         public int TicketId { get; set; }
         public virtual Ticket Ticket { get; set; }
+
+        public string AuthorId { get; set; }
+        public ApplicationUser Author { get; set; }
 
         //local propeties
         public string FilePath { get; set; }

@@ -20,6 +20,9 @@ namespace BugTracker.Models
         public string AuthorId { get; set; }
         public virtual ApplicationUser Author { get; set; }
 
+        public string AssigneeId { get; set; }
+        public virtual ApplicationUser Assignee { get; set; }
+
         public string DeveloperId { get; set; }
         public virtual ApplicationUser Developer { get; set; }
 

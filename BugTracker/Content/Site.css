@@ -146,3 +146,19 @@
     font-size: 14px;
     color: #337ab7;
 }
+
+.ticket-input {
+    margin-bottom: 14px;
+}
+
+#my-fieldset {
+    border: 1px #d2d2d2 solid;
+    padding: 20px;
+    padding-bottom: 0;
+    margin-bottom: 14px;
+}
+
+    #my-fieldset > legend {
+        width: auto;
+        font-size: 16px;
+    }

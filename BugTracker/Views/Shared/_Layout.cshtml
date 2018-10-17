@@ -158,7 +158,7 @@
 
                                 @if (User.IsInRole("Project Manager") && User.Identity.IsAuthenticated)
                                 {
-                                   
+
                                     <li>
                                         <a href=@Url.Action("MyProjectsTickets","Tickets")><i class="far fa-dot-circle fa-fw"></i> Tickets on your projects</a>
                                     </li>
@@ -261,6 +261,7 @@
 
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script src="~/Content/Template/vendor/metisMenu/metisMenu.min.js"></script>

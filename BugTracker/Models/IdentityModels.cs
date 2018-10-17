@@ -27,6 +27,12 @@ namespace BugTracker.Models
         [InverseProperty("AssignedDevelopers")]
         public virtual ICollection<Project> ProjectsManage { get; set; }
 
+        [InverseProperty("Assignee")]
+        public virtual ICollection<Ticket> AssignedTickets { get; set; }
+
+        [InverseProperty("Author")]
+        public virtual ICollection<Ticket> CreatedTickets { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -56,6 +62,6 @@ namespace BugTracker.Models
         public System.Data.Entity.DbSet<BugTracker.Models.Ticket> Tickets { get; set; }
 
         public System.Data.Entity.DbSet<BugTracker.Models.TicketComment> TicketComments { get; set; }
-
+        public DbSet<TicketAttachment> TicketAttachments { get; set; }
     }
 }

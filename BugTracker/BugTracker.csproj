@@ -204,6 +204,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\TicketAttachmentsController.cs" />
+    <Compile Include="Models\Helpers\SlugConverter.cs" />
     <Compile Include="Controllers\TicketCommentsController.cs" />
     <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="Controllers\UserManagerController.cs" />
@@ -403,6 +405,7 @@
     <Content Include="Content\Template\vendor\font-awesome\scss\_stacked.scss" />
     <Content Include="Content\Template\vendor\font-awesome\scss\_variables.scss" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\fileUpload.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -470,9 +473,15 @@
     <Content Include="Views\TicketComments\Index.cshtml" />
     <Content Include="Views\TicketComments\NoAccess.cshtml" />
     <Content Include="Views\Tickets\NoAccess.cshtml" />
+    <Content Include="Views\TicketAttachments\Create.cshtml" />
+    <Content Include="Views\TicketAttachments\Delete.cshtml" />
+    <Content Include="Views\TicketAttachments\Details.cshtml" />
+    <Content Include="Views\TicketAttachments\Edit.cshtml" />
+    <Content Include="Views\TicketAttachments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="uploads\tickets\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
