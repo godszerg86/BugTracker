@@ -1,6 +1,7 @@
 namespace BugTracker.Migrations
 {
     using BugTracker.Models;
+    using BugTracker.Models.TicketAddonsModels;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using System;
@@ -25,7 +26,7 @@ namespace BugTracker.Migrations
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            
+
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
                 roleManager.Create(new IdentityRole { Name = "Admin" });
@@ -46,7 +47,7 @@ namespace BugTracker.Migrations
                 roleManager.Create(new IdentityRole { Name = "Submitter" });
             }
 
-           
+
 
             ApplicationUser adminUser = new ApplicationUser();
             ApplicationUser demoDEV = new ApplicationUser();
@@ -151,6 +152,36 @@ namespace BugTracker.Migrations
                     new ProjectType() { Type = "React" },
                     new ProjectType() { Type = "ASP.NET" },
                     new ProjectType() { Type = "Nodejs" }
+                    );
+            }
+
+
+            //seeding ticket status table
+            if (!context.TicketStatus.Any())
+            {
+                context.TicketStatus.AddOrUpdate(item => item.Id,
+                   new TicketStatus() { Name = "Opened" },
+                   new TicketStatus() { Name = "In develop" },
+                   new TicketStatus() { Name = "Closed" }
+                    );
+            }
+
+            //seeding ticket type table
+            if (!context.TicketType.Any())
+            {
+                context.TicketType.AddOrUpdate(item => item.Id,
+                   new TicketType() { Name = "Bug" },
+                   new TicketType() { Name = "Error" },
+                   new TicketType() { Name = "UI" }
+                    );
+            }
+
+            //seeding ticket priority table
+            if (!context.TicketPriority.Any())
+            {
+                context.TicketPriority.AddOrUpdate(item => item.Id,
+                   new TicketPriority() { Name = "High" },
+                   new TicketPriority() { Name = "Low" }
                     );
             }
 

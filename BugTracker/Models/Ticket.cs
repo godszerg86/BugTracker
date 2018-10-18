@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BugTracker.Models.TicketAddonsModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,6 +34,14 @@ namespace BugTracker.Models
         public string DeveloperId { get; set; }
         public virtual ApplicationUser Developer { get; set; }
 
+        public int? TicketTypeId { get; set; }
+        public virtual TicketType TicketType { get; set; }
+
+        public int? TicketPriorityId { get; set; }
+        public virtual TicketPriority TicketPriority { get; set; }
+
+        public int? TicketStatusId { get; set; }
+        public virtual TicketStatus TicketStatus { get; set; }
 
         public virtual ICollection<TicketComment> Comments { get; set; }
         public virtual ICollection<TicketAttachment> Attachments { get; set; }

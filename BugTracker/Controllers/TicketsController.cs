@@ -223,7 +223,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ticket ticket = db.Tickets.Find(id);
+            Ticket ticket = db.Tickets.Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType).FirstOrDefault(t => t.Id == id);
             if (ticket == null)
             {
                 return HttpNotFound();
@@ -234,6 +234,34 @@ namespace BugTracker.Controllers
                 || ((ticket.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
                 )
             {
+                if (ticket.TicketPriorityId != null)
+                {
+
+                    ViewBag.TicketPriority = new SelectList(db.TicketPriority.ToList(), "Id", "Name", ticket.TicketPriorityId);
+                } else
+                {
+                    ViewBag.TicketPriority = new SelectList(db.TicketPriority.ToList(), "Id", "Name");
+                }
+
+                if (ticket.TicketStatusId != null)
+                {
+
+                    ViewBag.TicketStatus = new SelectList(db.TicketStatus.ToList(), "Id", "Name", ticket.TicketStatusId);
+                }
+                else
+                {
+                    ViewBag.TicketStatus = new SelectList(db.TicketStatus.ToList(), "Id", "Name");
+                }
+
+                if (ticket.TicketTypeId != null)
+                {
+
+                    ViewBag.TicketType = new SelectList(db.TicketType.ToList(), "Id", "Name", ticket.TicketTypeId);
+                }
+                else
+                {
+                    ViewBag.TicketType = new SelectList(db.TicketType.ToList(), "Id", "Name");
+                }
 
                 return View(ticket);
             }

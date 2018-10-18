@@ -67,6 +67,27 @@
                         @Html.DisplayFor(model => model.Updated)
                     </dd>
                     <dt>
+                        Ticket type:
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TicketType.Name)
+                    </dd>
+                    <dt>
+                        Ticket status:
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TicketStatus.Name)
+                    </dd>
+                    <dt>
+                        Ticket priority:
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TicketPriority.Name)
+                    </dd>
+                    <dt>
                         Ticket attachments:
                     </dt>
 

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BugTracker.Models.TicketAddonsModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -66,5 +67,9 @@ namespace BugTracker.Models
         public System.Data.Entity.DbSet<BugTracker.Models.TicketComment> TicketComments { get; set; }
         public DbSet<TicketAttachment> TicketAttachments { get; set; }
         public DbSet<TicketHistory> TicketHistory { get; set; }
+
+        public DbSet<TicketStatus> TicketStatus { get; set; }
+        public DbSet<TicketPriority> TicketPriority { get; set; }
+        public DbSet<TicketType> TicketType { get; set; }
     }
 }
