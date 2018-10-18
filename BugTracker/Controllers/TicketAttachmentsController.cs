@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
@@ -77,7 +78,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FileBase,FileDescription")] List<TicketAttachmentViewModel> ticketAttachments, int TicketId, int ProjectId)
+        public async System.Threading.Tasks.Task<ActionResult> Create([Bind(Include = "Id,FileBase,FileDescription")] List<TicketAttachmentViewModel> ticketAttachments, int TicketId, int ProjectId)
         {
             if (ModelState.IsValid)
             {
@@ -119,6 +120,19 @@ namespace BugTracker.Controllers
 
 
                     db.SaveChanges();
+
+                    var devDB = ticketDB.Developer;
+
+                    if (devDB != null)
+                    {
+
+                        var newMail = new MailMessage(userDB.Email, devDB.Email);
+                        newMail.Subject = $"Ticket {ticketDB.Title} has new attachment";
+                        newMail.Body = $"<h3>This is email from {userDB.DisplayName}. <p>Ticket attach to you have new attachment.<p/>";
+                        newMail.IsBodyHtml = true;
+
+                        await PersonalEmail.SendAsync(newMail);
+                    }
                     return RedirectToAction("Details", "Tickets", new { id = TicketId });
                 }
             }

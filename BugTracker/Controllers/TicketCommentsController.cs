@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
@@ -59,7 +60,7 @@ namespace BugTracker.Controllers
         [Authorize(Roles ="Admin,Project Manager,Submitter,Developer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,Body")] TicketComment ticketComment, int ProjectId)
+        public async System.Threading.Tasks.Task<ActionResult> Create([Bind(Include = "Id,TicketId,Body")] TicketComment ticketComment, int ProjectId)
         {
             if (ModelState.IsValid)
             {
@@ -76,6 +77,20 @@ namespace BugTracker.Controllers
                     ticketComment.AuthorId = User.Identity.GetUserId();
                     db.TicketComments.Add(ticketComment);
                     db.SaveChanges();
+
+                    var devDB = ticketDb.Developer;
+
+                    if (devDB != null)
+                    {
+
+                        var newMail = new MailMessage(userDB.Email, devDB.Email);
+                        newMail.Subject = $"Ticket {ticketDb.Title} has new comment";
+                        newMail.Body = $"<h3>This is email from {userDB.DisplayName}. <p>Ticket attach to you have new comment.<p/>";
+                        newMail.IsBodyHtml = true;
+
+                        await PersonalEmail.SendAsync(newMail);
+                    }
+
                     return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
 
                 }

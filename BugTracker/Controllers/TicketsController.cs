@@ -5,12 +5,16 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using BugTracker.Models;
 using BugTracker.Models.classes;
 using BugTracker.Models.Helpers;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using PagedList;
 using PagedList.Mvc;
 
@@ -27,6 +31,7 @@ namespace BugTracker.Controllers
             UserHelper = new UserHelper(db);
 
         }
+
 
 
         // GET: Tickets
@@ -241,7 +246,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Project Manager,Developer")]
-        public ActionResult Edit([Bind(Include = "Id,Title,Description")] Ticket ticket)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -288,6 +293,19 @@ namespace BugTracker.Controllers
                     db.TicketHistory.AddRange(changes);
 
                     db.SaveChanges();
+                    var devDB = ticketDB.Developer;
+
+                    if (devDB != null)
+                    {
+
+                        var newMail = new MailMessage(userDB.Email, devDB.Email);
+                        newMail.Subject = $"Ticket {ticket.Title} has changed";
+                        newMail.Body = $"<h3>This is email from {userDB.DisplayName}. <p>Ticket attach to you have changed.<p/>";
+                        newMail.IsBodyHtml = true;
+
+                        await PersonalEmail.SendAsync(newMail);
+                    }
+
                     return RedirectToAction("Index", "Projects");
                 }
             }
@@ -370,7 +388,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Project Manager")]
-        public ActionResult AssignDeveloper([Bind(Include = "TicketId,SelectedDevId,ProjectId")] AssignTicketToDeveloperModel model)
+        public async Task<ActionResult> AssignDeveloper([Bind(Include = "TicketId,SelectedDevId,ProjectId")] AssignTicketToDeveloperModel model)
         {
             var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
 
@@ -383,6 +401,18 @@ namespace BugTracker.Controllers
                 }
                 ticket.DeveloperId = model.SelectedDevId;
                 db.SaveChanges();
+
+
+                var devDB = db.Users.FirstOrDefault(u => u.Id == model.SelectedDevId);
+
+                var newMail = new MailMessage(userDB.Email, devDB.Email);
+                newMail.Subject = "New ticket was attached to you.";
+                newMail.Body = $"<h3>This is email from {userDB.DisplayName}. <p>New ticket was attached to you.<p/>";
+                newMail.IsBodyHtml = true;
+
+                await PersonalEmail.SendAsync(newMail);
+
+
                 return RedirectToAction("Details", "Projects", new { id = model.ProjectId });
             }
             return View("NoAccess");
