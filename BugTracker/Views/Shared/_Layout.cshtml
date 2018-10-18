@@ -40,35 +40,39 @@
 
             <!-- /.dropdown -->
             <!-- /.dropdown -->
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-wrench fa-fw"></i> <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-alerts">
-                    <li>
-                        <a href=@Url.Action("Create","Projects")>
-                            <div>
-                                <i class="fa fa-plus-square fa-fw"></i> Add project
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="@Url.Action("Index","UserManager",null)">
-                            <div>
-                                <i class="fa fa-user-edit fa-fw"></i> Manage users
-                            </div>
-                        </a>
-                    </li>
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Project Manager")))
+            {
 
-                </ul>
-            </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                        <li>
+                            <a href=@Url.Action("Create","Projects")>
+                                <div>
+                                    <i class="fa fa-plus-square fa-fw"></i> Add project
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Action("Index","UserManager",null)">
+                                <div>
+                                    <i class="fa fa-user-edit fa-fw"></i> Manage users
+                                </div>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            }
             <!-- /.dropdown -->
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-user">
+                <ul class="dropdown-menu dropdown-user" style="min-width: 212px;">
                     @if (Request.IsAuthenticated)
                     {
                         using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -132,7 +136,26 @@
                         <!-- /input-group -->
                     </li>
                     <li>
+                        <a href="#"><i class="fa fa-user fa-fw"></i> User roles<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href=@Url.Action("SwithUser","Account",new {role =  "Project Manager"})><i class="far fa-dot-circle fa-fw"></i> Project Manager</a>
+                            </li>
+                            <li>
+                                <a href=@Url.Action("SwithUser","Account",new { role = "Submitter" })><i class="far fa-dot-circle fa-fw"></i> Submitter</a>
+                            </li>
+                            <li>
+                                <a href=@Url.Action("SwithUser","Account",new { role = "Developer" })><i class="far fa-dot-circle fa-fw"></i> Developer</a>
+                            </li>
+
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
                         <a href="/"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="/"><i class="fa fa-sitemap fa-fw"></i> Projects</a>
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -173,78 +196,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                     }
-                    <li>
-                        <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
-                    </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="panels-wells.html">Panels and Wells</a>
-                            </li>
-                            <li>
-                                <a href="buttons.html">Buttons</a>
-                            </li>
-                            <li>
-                                <a href="notifications.html">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="typography.html">Typography</a>
-                            </li>
-                            <li>
-                                <a href="icons.html"> Icons</a>
-                            </li>
-                            <li>
-                                <a href="grid.html">Grid</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Third Level <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fas fa-file-signature fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="blank.html">Blank Page</a>
-                            </li>
-                            <li>
-                                <a href="login.html">Login Page</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
+
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->

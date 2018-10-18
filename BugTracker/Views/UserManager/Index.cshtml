@@ -52,14 +52,18 @@
                                             {
                                                 <h5><i class="fas fa-project-diagram fa-fw"></i> @item.Name</h5>
                                             }
-                                            <button  class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserAssignedProjects", new { id =user.Id})'">MANAGE</button>
+                                            <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserAssignedProjects", new { id =user.Id})'">MANAGE</button>
                                         </td>
                                         <td class="td-btn">
                                             @foreach (var item in user.Roles)
                                             {
                                                 <h5><i class="far fa-user fa-fw"></i> @item</h5>
                                             }
-                                            <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserRoles", new { id =user.Id})'">MANAGE</button>
+                                            @if (User.IsInRole("Admin") && User.Identity.IsAuthenticated)
+                                            {
+
+                                                <button class="btn btn-primary table-btn" onclick="location.href='@Url.Action("ManageUserRoles", new { id =user.Id})'">MANAGE</button>
+                                            }
                                         </td>
 
                                     </tr>

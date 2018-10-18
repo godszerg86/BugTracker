@@ -70,6 +70,24 @@ namespace BugTracker.Models.Helpers
             return resultList;
         }
 
+        internal ApplicationUser GetDemoUser(string role)
+        {
+            ApplicationUser returnUser = null;
+            if (role == "Project Manager")
+            {
+                returnUser = UserManager.FindByEmail("demoPM@demo.com");
+            }
+            if (role == "Developer")
+            {
+                returnUser = UserManager.FindByEmail("demoDEV@demo.com");
+            }
+            if (role == "Submitter")
+            {
+                returnUser = UserManager.FindByEmail("demoSUB@demo.com");
+            }
+
+            return returnUser;
+        }
 
         public ICollection<ApplicationUser> GetUsersNotInRole(string roleName)
         {

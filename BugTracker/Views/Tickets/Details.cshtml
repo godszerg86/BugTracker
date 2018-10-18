@@ -14,7 +14,8 @@
     <!-- /.row -->
     <div class="">
         <div class="row extra-pad">
-            <div>
+           
+            <div class="col-md-6">
                 <h4>Ticket</h4>
                 <hr />
                 <dl class="dl-horizontal">
@@ -79,12 +80,23 @@
                     </dd>
                 </dl>
             </div>
-            <p>
-                @Html.ActionLink("Back to project details", "Details", "Projects", new { id = Model.ProjectId }, null) |
-                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                @Html.ActionLink("Add attachment", "Create", "TicketAttachments", new { ticketId = Model.Id, projectId = Model.ProjectId }, null) 
-            </p>
+            <div class="col-md-6">
+                <h4>Ticket history:</h4>
+                <hr />
+                <ul class="list-group">
+                    @foreach (var item in Model.Histories)
+                    {
+                        <li class="list-group-item"><a href=@Url.Action("Details","TicketHistories", new { id = item.Id})>@item.Changed.ToString("dd-MM-yyy HH:mm")</a> Changed by: @item.User.DisplayName</li>
+                    }
+                </ul>
+            </div>
+
         </div>
+        <p>
+            @Html.ActionLink("Back to project details", "Details", "Projects", new { id = Model.ProjectId }, null) |
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+            @Html.ActionLink("Add attachment", "Create", "TicketAttachments", new { ticketId = Model.Id, projectId = Model.ProjectId }, null)
+        </p>
         <hr />
 
         @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Project Manager") || User.IsInRole("Developer") || User.IsInRole("Submitter")))

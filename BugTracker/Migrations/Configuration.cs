@@ -46,13 +46,13 @@ namespace BugTracker.Migrations
                 roleManager.Create(new IdentityRole { Name = "Submitter" });
             }
 
-            if (!context.Roles.Any(r => r.Name == "Demo User"))
-            {
-                roleManager.Create(new IdentityRole { Name = "Demo User" });
-            }
+           
 
             ApplicationUser adminUser = new ApplicationUser();
-
+            ApplicationUser demoDEV = new ApplicationUser();
+            ApplicationUser demoSUB = new ApplicationUser();
+            ApplicationUser demoPM = new ApplicationUser();
+            // seeding admin
             if (!context.Users.Any(item => item.UserName == "admin@admin.com"))
             {
                 adminUser.UserName = "admin@admin.com";
@@ -74,8 +74,76 @@ namespace BugTracker.Migrations
                 userManager.AddToRole(adminUser.Id, "Admin");
             }
 
+
+            // seeding demo project manager
+            if (!context.Users.Any(item => item.UserName == "demoPM@demo.com"))
+            {
+                demoPM.UserName = "demoPM@demo.com";
+                demoPM.Email = "demoPM@demo.com";
+                demoPM.LastName = "John";
+                demoPM.FirstName = "Doe";
+                demoPM.DisplayName = "Project Manager";
+
+
+                userManager.Create(demoPM, "demoPM@demo.com");
+            }
+            else
+            {
+                demoPM = context.Users.FirstOrDefault(item => item.UserName == "demoPM@demo.com");
+            }
+
+            if (!userManager.IsInRole(demoPM.Id, "Project Manager"))
+            {
+                userManager.AddToRole(demoPM.Id, "Project Manager");
+            }
+
+            // seeding demo developer
+            if (!context.Users.Any(item => item.UserName == "demoDEV@demo.com"))
+            {
+                demoDEV.UserName = "demoDEV@demo.com";
+                demoDEV.Email = "demoDEV@demo.com";
+                demoDEV.LastName = "John";
+                demoDEV.FirstName = "Doe";
+                demoDEV.DisplayName = "Developer";
+
+
+                userManager.Create(demoDEV, "demoDEV@demo.com");
+            }
+            else
+            {
+                demoDEV = context.Users.FirstOrDefault(item => item.UserName == "demoDEV@demo.com");
+            }
+
+            if (!userManager.IsInRole(demoDEV.Id, "Developer"))
+            {
+                userManager.AddToRole(demoDEV.Id, "Developer");
+            }
+
+            // seeding demo submitter
+            if (!context.Users.Any(item => item.UserName == "demoSUB@demo.com"))
+            {
+                demoSUB.UserName = "demoSUB@demo.com";
+                demoSUB.Email = "demoSUB@demo.com";
+                demoSUB.LastName = "John";
+                demoSUB.FirstName = "Doe";
+                demoSUB.DisplayName = "Submitter";
+
+
+                userManager.Create(demoSUB, "demoSUB@demo.com");
+            }
+            else
+            {
+                demoSUB = context.Users.FirstOrDefault(item => item.UserName == "demoSUB@demo.com");
+            }
+
+            if (!userManager.IsInRole(demoSUB.Id, "Submitter"))
+            {
+                userManager.AddToRole(demoSUB.Id, "Submitter");
+            }
+
+
             //seeding types table
-            if(!context.ProjectTypes.Any())
+            if (!context.ProjectTypes.Any())
             {
                 context.ProjectTypes.AddOrUpdate(item => item.Id,
                     new ProjectType() { Type = "Angular" },

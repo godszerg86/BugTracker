@@ -93,6 +93,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize (Roles = "Admin,Project Manager")]
         public ActionResult Create()
         {
             ViewBag.ProjectTypeId = new SelectList(db.ProjectTypes, "Id", "Type");
@@ -102,8 +103,10 @@ namespace BugTracker.Controllers
         // POST: Projects/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Project Manager")]
         public ActionResult Create([Bind(Include = "Id,Name,Description,ProjectTypeId,Created")] Project project)
         {
             if (ModelState.IsValid)

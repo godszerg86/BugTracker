@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
+using BugTracker.Models.Helpers;
 
 namespace BugTracker.Controllers
 {
@@ -17,15 +18,21 @@ namespace BugTracker.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private UserHelper UserHelper;
+        private ApplicationDbContext db;
 
         public AccountController()
         {
+            db = new ApplicationDbContext();
+            UserHelper = new UserHelper(db);
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            db = new ApplicationDbContext();
+            UserHelper = new UserHelper(db);
         }
 
         public ApplicationSignInManager SignInManager
@@ -51,6 +58,21 @@ namespace BugTracker.Controllers
                 _userManager = value;
             }
         }
+
+
+        // change roles
+        public ActionResult SwithUser(string role)
+        {
+            ApplicationUser userDB = UserHelper.GetDemoUser(role);
+            if (userDB != null)
+            {
+                var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                signInManager.SignIn(userDB, isPersistent: false, rememberBrowser: false);
+            }
+
+            return RedirectToAction("Index", "Projects");
+        }
+
 
         //
         // GET: /Account/Login

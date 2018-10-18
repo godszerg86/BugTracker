@@ -1,0 +1,60 @@
+﻿@model BugTracker.Models.TicketHistory
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Ticket details</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="">
+        <div class="row extra-pad">
+
+            <div>
+                <h4>Ticket changes on @Model.Changed.ToString("dd-MM-yyyy HH:mm")</h4>
+                <hr />
+                <dl class="dl-horizontal">
+               
+                    <dt>
+                        Changes by:
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.User.DisplayName)
+                    </dd>
+
+                    <dt>
+                        What changed:
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Property)
+                    </dd>
+
+                    <dt>
+                        Old value:
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.OldValue)
+                    </dd>
+
+                    <dt>
+                       New value:
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.NewValue)
+                    </dd>
+
+              
+
+                </dl>
+            </div>
+            <p>
+                @Html.ActionLink("Back to ticket", "Details", "Tickets", new { id = Model.TicketId},null)
+            </p>
+        </div>
+    </div>
+</div>

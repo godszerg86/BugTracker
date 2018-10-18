@@ -25,6 +25,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: UserManager
+        [Authorize(Roles = "Admin,Project Manager")]
         public ActionResult Index()
         {
             userList = new HashSet<UserListModel>();
@@ -47,6 +48,7 @@ namespace BugTracker.Controllers
         }
 
         //GET: ManageUser
+        [Authorize(Roles = "Project Manager")]
         public ActionResult ManageUserAssignedProjects(string id)
         {
             var userDB = UserHelper.GetUserById(id);
@@ -71,6 +73,7 @@ namespace BugTracker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Project Manager")]
         public ActionResult ManageUserAssignedProjects(int[] assign, string id)
         {
 
@@ -90,7 +93,7 @@ namespace BugTracker.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [Authorize(Roles = "Admin")]
         public ActionResult ManageUserRoles(string id)
         {
             var userDB = UserHelper.GetUserById(id);
@@ -113,6 +116,7 @@ namespace BugTracker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult ManageUserRoles(string selectedRole, string id)
         {
             var userDB = UserHelper.GetUserById(id);
