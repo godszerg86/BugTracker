@@ -144,7 +144,9 @@ namespace BugTracker.Controllers
         public ActionResult Create(int projectId)
         {
             var ticketModel = new CreateTicketListModel();
+            
             ticketModel.ProjectId = projectId;
+            ticketModel.TicketType = new SelectList(db.TicketType.ToList(), "Id", "Name");
             return View(ticketModel);
         }
 
@@ -154,7 +156,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Submitter")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileDescription")] Ticket ticket, List<TicketAttachmentViewModel> ticketAttachments)
+        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileDescription,TicketTypeId")] Ticket ticket, List<TicketAttachmentViewModel> ticketAttachments)
         { //TODO:
 
             var projectDB = db.Projects.Find(ticket.ProjectId);

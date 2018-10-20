@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace BugTracker.Models.classes
 {
@@ -14,7 +15,7 @@ namespace BugTracker.Models.classes
         public string Title { get; set; }
         public string Description { get; set; }
 
-
+        public SelectList TicketType { get; set; }
 
     }
 }

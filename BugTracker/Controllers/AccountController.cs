@@ -61,7 +61,8 @@ namespace BugTracker.Controllers
 
 
         // change roles
-        public ActionResult SwithUser(string role)
+        [AllowAnonymous]
+        public ActionResult SwitchUser(string role)
         {
             ApplicationUser userDB = UserHelper.GetDemoUser(role);
             if (userDB != null)
