@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using BugTracker.Hubs;
 using BugTracker.Models;
 using BugTracker.Models.classes;
 using BugTracker.Models.Helpers;
@@ -144,9 +145,7 @@ namespace BugTracker.Controllers
         public ActionResult Create(int projectId)
         {
             var ticketModel = new CreateTicketListModel();
-            
             ticketModel.ProjectId = projectId;
-            ticketModel.TicketType = new SelectList(db.TicketType.ToList(), "Id", "Name");
             return View(ticketModel);
         }
 
@@ -156,7 +155,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Submitter")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileDescription,TicketTypeId")] Ticket ticket, List<TicketAttachmentViewModel> ticketAttachments)
+        public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,FileBase,FileDescription")] Ticket ticket, List<TicketAttachmentViewModel> ticketAttachments)
         { //TODO:
 
             var projectDB = db.Projects.Find(ticket.ProjectId);
@@ -239,30 +238,31 @@ namespace BugTracker.Controllers
                 if (ticket.TicketPriorityId != null)
                 {
 
-                    ViewBag.TicketPriorityId = new SelectList(db.TicketPriority.ToList(), "Id", "Name", ticket.TicketPriorityId);
-                } else
+                    ViewBag.TicketPriority = new SelectList(db.TicketPriority.ToList(), "Id", "Name", ticket.TicketPriorityId);
+                }
+                else
                 {
-                    ViewBag.TicketPriorityId = new SelectList(db.TicketPriority.ToList(), "Id", "Name");
+                    ViewBag.TicketPriority = new SelectList(db.TicketPriority.ToList(), "Id", "Name");
                 }
 
                 if (ticket.TicketStatusId != null)
                 {
 
-                    ViewBag.TicketStatusId = new SelectList(db.TicketStatus.ToList(), "Id", "Name", ticket.TicketStatusId);
+                    ViewBag.TicketStatus = new SelectList(db.TicketStatus.ToList(), "Id", "Name", ticket.TicketStatusId);
                 }
                 else
                 {
-                    ViewBag.TicketStatusId = new SelectList(db.TicketStatus.ToList(), "Id", "Name");
+                    ViewBag.TicketStatus = new SelectList(db.TicketStatus.ToList(), "Id", "Name");
                 }
 
                 if (ticket.TicketTypeId != null)
                 {
 
-                    ViewBag.TicketTypeId = new SelectList(db.TicketType.ToList(), "Id", "Name", ticket.TicketTypeId);
+                    ViewBag.TicketType = new SelectList(db.TicketType.ToList(), "Id", "Name", ticket.TicketTypeId);
                 }
                 else
                 {
-                    ViewBag.TicketTypeId = new SelectList(db.TicketType.ToList(), "Id", "Name");
+                    ViewBag.TicketType = new SelectList(db.TicketType.ToList(), "Id", "Name");
                 }
 
                 return View(ticket);
@@ -276,7 +276,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Project Manager,Developer")]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,TicketTypeId,TicketStatusId,TicketPriorityId")] Ticket ticket)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -295,9 +295,6 @@ namespace BugTracker.Controllers
                     ticketDB.Title = ticket.Title;
                     ticketDB.Description = ticket.Description;
                     ticketDB.Updated = dateTimeNow;
-                    ticketDB.TicketTypeId = ticket.TicketTypeId;
-                    ticketDB.TicketStatusId = ticket.TicketStatusId;
-                    ticketDB.TicketPriorityId = ticket.TicketPriorityId;
 
                     var originalValues = db.Entry(ticketDB).OriginalValues;
                     var currentValues = db.Entry(ticketDB).CurrentValues;
@@ -339,7 +336,7 @@ namespace BugTracker.Controllers
                         await PersonalEmail.SendAsync(newMail);
                     }
 
-                    return RedirectToAction("Details", "Tickets", new { id = ticket.Id});
+                    return RedirectToAction("Index", "Projects");
                 }
             }
             return View("NoAccess");
@@ -451,7 +448,13 @@ namespace BugTracker.Controllers
             return View("NoAccess");
         }
 
+        public ActionResult SendTest()
 
+        {
+
+            NotificationHub.SendMessage("demoDEV@demo.com", "Test project", "ticket #4", 6);
+            return RedirectToAction("Index", "Home");
+        }
 
         protected override void Dispose(bool disposing)
         {
