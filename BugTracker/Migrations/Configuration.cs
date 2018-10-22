@@ -147,11 +147,11 @@ namespace BugTracker.Migrations
             if (!context.ProjectTypes.Any())
             {
                 context.ProjectTypes.AddOrUpdate(item => item.Id,
-                    new ProjectType() { Type = "Angular" },
-                    new ProjectType() { Type = "Vuejs" },
-                    new ProjectType() { Type = "React" },
-                    new ProjectType() { Type = "ASP.NET" },
-                    new ProjectType() { Type = "Nodejs" }
+                    new ProjectType() { Type = "Angular", HexColor = "#c30e2e" },
+                    new ProjectType() { Type = "Vuejs", HexColor = "#4dba87" },
+                    new ProjectType() { Type = "React", HexColor = "#61dafb" },
+                    new ProjectType() { Type = "ASP.NET", HexColor = "#60399e" },
+                    new ProjectType() { Type = "Nodejs", HexColor = "#3c823b" }
                     );
             }
 
@@ -160,9 +160,9 @@ namespace BugTracker.Migrations
             if (!context.TicketStatus.Any())
             {
                 context.TicketStatus.AddOrUpdate(item => item.Id,
-                   new TicketStatus() { Name = "Opened" },
-                   new TicketStatus() { Name = "In develop" },
-                   new TicketStatus() { Name = "Closed" }
+                   new TicketStatus() { Name = "Opened", HexColor = "#85C1E9" },
+                   new TicketStatus() { Name = "In develop", HexColor = "#E8DAEF" },
+                   new TicketStatus() { Name = "Closed", HexColor = "#27AE60" }
                     );
             }
 
@@ -170,9 +170,9 @@ namespace BugTracker.Migrations
             if (!context.TicketType.Any())
             {
                 context.TicketType.AddOrUpdate(item => item.Id,
-                   new TicketType() { Name = "Bug" },
-                   new TicketType() { Name = "Error" },
-                   new TicketType() { Name = "UI" }
+                   new TicketType() { Name = "Bug", HexColor = "#f5cba7" },
+                   new TicketType() { Name = "Error", HexColor = "#c39bd3" },
+                   new TicketType() { Name = "UI", HexColor = "#A2D9CE" }
                     );
             }
 
@@ -180,8 +180,8 @@ namespace BugTracker.Migrations
             if (!context.TicketPriority.Any())
             {
                 context.TicketPriority.AddOrUpdate(item => item.Id,
-                   new TicketPriority() { Name = "High" },
-                   new TicketPriority() { Name = "Low" }
+                   new TicketPriority() { Name = "High", HexColor = "#F39C12" },
+                   new TicketPriority() { Name = "Low" , HexColor = "#2874A6" }
                     );
             }
 

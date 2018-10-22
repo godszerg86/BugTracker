@@ -1,31 +1,296 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
+﻿<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+@using Highsoft.Web.Mvc.Charts
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Dashboard:</h1>
+        </div>
+        <!-- /.col-lg-12 -->
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <!-- /.row -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                @(Html.Highsoft().GetHighcharts(
+                                                                   new Highcharts
+                                                                   {
+                                                                       Chart = new Highsoft.Web.Mvc.Charts.Chart
+                                                                       {
+                                                                           PlotBackgroundColor = "#ffffff",
+                                                                           PlotBorderWidth = null
+
+
+                                                                       },
+                                                                       Exporting = new Exporting
+                                                                       {
+                                                                           Enabled = false
+                                                                       },
+                                                                       Lang = new Lang
+                                                                       {
+                                                                           NoData = "There is no data to display."
+                                                                       },
+                                                                       Title = new Title
+                                                                       {
+                                                                           Text = "Projects by types:"
+                                                                       },
+                                                                       Tooltip = new Tooltip
+                                                                       {
+                                                                           PointFormat = "{series.name}: <b>{point.y:f}</b>"
+                                                                       },
+                                                                       PlotOptions = new PlotOptions
+                                                                       {
+                                                                           Pie = new PlotOptionsPie
+                                                                           {
+                                                                               AllowPointSelect = true,
+                                                                               Cursor = PlotOptionsPieCursor.Pointer,
+                                                                               DataLabels = new PlotOptionsPieDataLabels
+                                                                               {
+                                                                                   Enabled = false
+                                                                               },
+                                                                               ShowInLegend = true
+                                                                           }
+                                                                       },
+
+                                                                       YAxis = new List<YAxis>
+                                                                       {
+                                                new YAxis
+                                                {
+                                                    Min = 0,
+                                                    Title = new YAxisTitle
+                                                    {
+                                                        Text = "Population (millions)",
+                                                        Align = YAxisTitleAlign.High
+                                                    }
+                                                }
+                                                                       },
+                                                                       Series = new List<Series>
+                                                                       {
+                                                new PieSeries
+                                                {
+                                                    Name = "Pojects",
+                                                    Data = @ViewData["pieProjects"] as List<PieSeriesData>
+                                                },
+
+                                                                       }
+                                                                   }
+                                                                   , "projTypes")
+                )
+            </div>
+            <div class="col-md-6">
+                @(Html.Highsoft().GetHighcharts(
+                                                                   new Highcharts
+                                                                   {
+                                                                       Chart = new Highsoft.Web.Mvc.Charts.Chart
+                                                                       {
+                                                                           PlotBackgroundColor = "#ffffff",
+                                                                           PlotBorderWidth = null
+
+
+                                                                       },
+                                                                       Exporting = new Exporting
+                                                                       {
+                                                                           Enabled = false
+                                                                       },
+
+                                                                       Lang = new Lang
+                                                                       {
+                                                                           NoData = "There is no data to display."
+                                                                       },
+                                                                       Title = new Title
+                                                                       {
+                                                                           Text = "Tickets by types:"
+                                                                       },
+                                                                       Tooltip = new Tooltip
+                                                                       {
+                                                                           PointFormat = "{series.name}: <b>{point.y:f}</b>"
+                                                                       },
+                                                                       PlotOptions = new PlotOptions
+                                                                       {
+                                                                           Pie = new PlotOptionsPie
+                                                                           {
+                                                                               AllowPointSelect = true,
+                                                                               Cursor = PlotOptionsPieCursor.Pointer,
+                                                                               DataLabels = new PlotOptionsPieDataLabels
+                                                                               {
+                                                                                   Enabled = false
+                                                                               },
+                                                                               ShowInLegend = true
+                                                                           }
+                                                                       },
+
+                                                                       YAxis = new List<YAxis>
+                                                                       {
+                                                new YAxis
+                                                {
+                                                    Min = 0,
+                                                    Title = new YAxisTitle
+                                                    {
+                                                        Text = "Population (millions)",
+                                                        Align = YAxisTitleAlign.High
+                                                    }
+
+
+                                                }
+                                                                       },
+                                                                       Series = new List<Series>
+                                                                       {
+                                                new PieSeries
+                                                {
+                                                    Name = "Tickets",
+                                                    Data = @ViewData["pieTicketType"] as List<PieSeriesData>
+
+
+                                                },
+
+                                                                       }
+                                                                   }
+                                                                   , "ticketTypes")
+                )
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @(Html.Highsoft().GetHighcharts(
+                                                                   new Highcharts
+                                                                   {
+                                                                       Chart = new Highsoft.Web.Mvc.Charts.Chart
+                                                                       {
+                                                                           PlotBackgroundColor = "#ffffff",
+                                                                           PlotBorderWidth = null
+
+
+                                                                       },
+                                                                       Exporting = new Exporting
+                                                                       {
+                                                                           Enabled = false
+                                                                       },
+                                                                       Lang = new Lang
+                                                                       {
+                                                                           NoData = "There is no data to display."
+                                                                       },
+                                                                       Title = new Title
+                                                                       {
+                                                                           Text = "Tickets by status:"
+                                                                       },
+                                                                       Tooltip = new Tooltip
+                                                                       {
+                                                                           PointFormat = "{series.name}: <b>{point.y:f}</b>"
+                                                                       },
+                                                                       PlotOptions = new PlotOptions
+                                                                       {
+                                                                           Pie = new PlotOptionsPie
+                                                                           {
+                                                                               AllowPointSelect = true,
+                                                                               Cursor = PlotOptionsPieCursor.Pointer,
+                                                                               DataLabels = new PlotOptionsPieDataLabels
+                                                                               {
+                                                                                   Enabled = false
+                                                                               },
+                                                                               ShowInLegend = true
+                                                                           }
+                                                                       },
+
+                                                                       YAxis = new List<YAxis>
+                                                                       {
+                                                new YAxis
+                                                {
+                                                    Min = 0,
+                                                    Title = new YAxisTitle
+                                                    {
+                                                        Text = "Population (millions)",
+                                                        Align = YAxisTitleAlign.High
+                                                    }
+                                                }
+                                                                       },
+                                                                       Series = new List<Series>
+                                                                       {
+                                                new PieSeries
+                                                {
+                                                    Name = "Tickets",
+                                                    Data = @ViewData["pieTicketStatus"] as List<PieSeriesData>
+                                                },
+
+                                                                       }
+                                                                   }
+                                                                   , "ticketStatus")
+                )
+            </div>
+            <div class="col-md-6">
+                @(Html.Highsoft().GetHighcharts(
+                                                                   new Highcharts
+                                                                   {
+                                                                       Chart = new Highsoft.Web.Mvc.Charts.Chart
+                                                                       {
+                                                                           PlotBackgroundColor = "#ffffff",
+                                                                           PlotBorderWidth = null
+
+
+                                                                       },
+                                                                       Exporting = new Exporting
+                                                                       {
+                                                                           Enabled = false
+                                                                       },
+
+                                                                       Lang = new Lang
+                                                                       {
+                                                                           NoData = "There is no data to display."
+                                                                       },
+                                                                       Title = new Title
+                                                                       {
+                                                                           Text = "Tickets by priority:"
+                                                                       },
+                                                                       Tooltip = new Tooltip
+                                                                       {
+                                                                           PointFormat = "{series.name}: <b>{point.y:f}</b>"
+                                                                       },
+                                                                       PlotOptions = new PlotOptions
+                                                                       {
+                                                                           Pie = new PlotOptionsPie
+                                                                           {
+                                                                               AllowPointSelect = true,
+                                                                               Cursor = PlotOptionsPieCursor.Pointer,
+                                                                               DataLabels = new PlotOptionsPieDataLabels
+                                                                               {
+                                                                                   Enabled = false
+                                                                               },
+                                                                               ShowInLegend = true
+                                                                           }
+                                                                       },
+
+                                                                       YAxis = new List<YAxis>
+                                                                       {
+                                                new YAxis
+                                                {
+                                                    Min = 0,
+                                                    Title = new YAxisTitle
+                                                    {
+                                                        Text = "Population (millions)",
+                                                        Align = YAxisTitleAlign.High
+                                                    }
+
+
+                                                }
+                                                                       },
+                                                                       Series = new List<Series>
+                                                                       {
+                                                new PieSeries
+                                                {
+                                                    Name = "Tickets",
+                                                    Data = @ViewData["pieTicketPriority"] as List<PieSeriesData>
+
+
+                                                },
+
+                                                                       }
+                                                                   }
+                                                                   , "ticketPrior")
+                )
+            </div>
+        </div>
     </div>
 </div>
