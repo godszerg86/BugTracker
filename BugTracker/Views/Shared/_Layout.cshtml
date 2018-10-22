@@ -155,7 +155,7 @@
                         <a href="/"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="/"><i class="fa fa-sitemap fa-fw"></i> Projects</a>
+                        <a href="@Url.Action("Index","Projects")"><i class="fa fa-sitemap fa-fw"></i> Projects</a>
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
