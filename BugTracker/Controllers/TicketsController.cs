@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using BugTracker.Hubs;
 using BugTracker.Models;
 using BugTracker.Models.classes;
 using BugTracker.Models.Helpers;
@@ -238,7 +239,8 @@ namespace BugTracker.Controllers
                 {
 
                     ViewBag.TicketPriority = new SelectList(db.TicketPriority.ToList(), "Id", "Name", ticket.TicketPriorityId);
-                } else
+                }
+                else
                 {
                     ViewBag.TicketPriority = new SelectList(db.TicketPriority.ToList(), "Id", "Name");
                 }
@@ -446,7 +448,13 @@ namespace BugTracker.Controllers
             return View("NoAccess");
         }
 
+        public ActionResult SendTest()
 
+        {
+
+            NotificationHub.SendMessage("demoDEV@demo.com", "Test project", "ticket #4", 6);
+            return RedirectToAction("Index", "Home");
+        }
 
         protected override void Dispose(bool disposing)
         {

@@ -6,6 +6,8 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using BugTracker.Models;
+using BugTracker.Hubs;
+using Microsoft.AspNet.SignalR;
 
 namespace BugTracker
 {
@@ -44,6 +46,11 @@ namespace BugTracker
             // Once you check this option, your second step of verification during the login process will be remembered on the device where you logged in from.
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
+
+
+            //var idProvider = new CustomUserIdProvider();
+            //GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => idProvider);
+            app.MapSignalR();
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
