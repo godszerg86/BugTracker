@@ -18,10 +18,13 @@ namespace BugTracker.Hubs
             //var hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
 
             //hubContext.Clients.User(userId).sendNotificationToDeveloper(projName, ticketName, projectId);
-
+        
             Clients.User(userId).sendNotificationToDeveloper(projName, ticketName, projectId);
         }
     }
+
+
+
 
     //public class CustomUserIdProvider : IUserIdProvider
     //{
