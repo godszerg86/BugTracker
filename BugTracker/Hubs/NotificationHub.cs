@@ -13,11 +13,13 @@ namespace BugTracker.Hubs
     {
         
 
-        public static void SendMessage(string userId,string projName, string ticketName, int projectId)
+        public void SendMessage(string userId,string projName, string ticketName, int projectId)
         {
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+            //var hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
 
-            hubContext.Clients.User(userId).sendNotificationToDeveloper(projName, ticketName, projectId);
+            //hubContext.Clients.User(userId).sendNotificationToDeveloper(projName, ticketName, projectId);
+
+            Clients.User(userId).sendNotificationToDeveloper(projName, ticketName, projectId);
         }
     }
 

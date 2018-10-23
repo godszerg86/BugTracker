@@ -126,8 +126,8 @@ namespace BugTracker.Controllers
             UserHelper.AddToRole(id, selectedRole);
 
             //: Refresh authentication cookies so the roles are updated instantly
-            var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            signInManager.SignIn(userDB, isPersistent: false, rememberBrowser: false);
+            //var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            //signInManager.SignIn(userDB, isPersistent: false, rememberBrowser: false);
             return RedirectToAction("Index");
         }
 

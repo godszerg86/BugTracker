@@ -453,13 +453,13 @@ namespace BugTracker.Controllers
             return View("NoAccess");
         }
 
-        public void SendTest()
+        //public void SendTest()
 
-        {
+        //{
 
-            NotificationHub.SendMessage("demoDEV@demo.com", "Test project", "ticket #4", 6);
-            //return RedirectToAction("Index", "Home");
-        }
+        //    NotificationHub.SendMessage("demoDEV@demo.com", "Test project", "ticket #4", 6);
+        //    //return RedirectToAction("Index", "Home");
+        //}
 
         protected override void Dispose(bool disposing)
         {
