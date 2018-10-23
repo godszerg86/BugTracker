@@ -12,6 +12,7 @@ using System.Web.Configuration;
 using System.Web.Mvc;
 using BugTracker.Hubs;
 using BugTracker.Models;
+using BugTracker.Models.ActionFilters;
 using BugTracker.Models.classes;
 using BugTracker.Models.Helpers;
 using Microsoft.AspNet.Identity;
@@ -220,6 +221,7 @@ namespace BugTracker.Controllers
 
         // GET: Tickets/Edit/5
         [Authorize(Roles = "Project Manager,Developer")]
+        [CheckTicketOwnFilter]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -232,11 +234,11 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
             var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
-            if (
-                (userDB.ProjectsManage.Any(p => p.Id == ticket.ProjectId) && User.IsInRole("Project Manager"))
-                || ((ticket.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
-                )
-            {
+            //if (
+            //    (userDB.ProjectsManage.Any(p => p.Id == ticket.ProjectId) && User.IsInRole("Project Manager"))
+            //    || ((ticket.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
+            //    )
+            //{
                 if (ticket.TicketPriorityId != null)
                 {
 
@@ -267,9 +269,9 @@ namespace BugTracker.Controllers
                     ViewBag.TicketTypeId = new SelectList(db.TicketType.ToList(), "Id", "Name");
                 }
 
-                return View(ticket);
-            }
-            return View("NoAccess");
+            //    return View(ticket);
+            //}
+            return View(ticket);
         }
 
         // POST: Tickets/Edit/5
@@ -277,6 +279,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CheckTicketOwnFilter]
         [Authorize(Roles = "Project Manager,Developer")]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,TicketTypeId,TicketStatusId,TicketPriorityId")] Ticket ticket)
         {
@@ -286,11 +289,11 @@ namespace BugTracker.Controllers
                 var ticketDB = db.Tickets.FirstOrDefault(t => t.Id == ticket.Id);
                 var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
 
-                if (
-                    (userDB.ProjectsManage.Any(p => p.Id == ticketDB.ProjectId) && User.IsInRole("Project Manager"))
-                    || ((ticketDB.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
-                    )
-                {
+                //if (
+                //    (userDB.ProjectsManage.Any(p => p.Id == ticketDB.ProjectId) && User.IsInRole("Project Manager"))
+                //    || ((ticketDB.DeveloperId == userDB.Id) && User.IsInRole("Developer"))
+                //    )
+                //{
 
                     var changes = new List<TicketHistory>();
 
@@ -341,10 +344,10 @@ namespace BugTracker.Controllers
                         await PersonalEmail.SendAsync(newMail);
                     }
 
-                    return RedirectToAction("Index", "Projects");
-                }
+                    
+                //}
             }
-            return View("NoAccess");
+            return RedirectToAction("Index", "Projects");
         }
 
 

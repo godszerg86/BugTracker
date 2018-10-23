@@ -217,6 +217,7 @@
     <Compile Include="Controllers\TicketAttachmentsController.cs" />
     <Compile Include="Controllers\TicketHistoriesController.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
+    <Compile Include="Models\ActionFilters\CheckTicketOwnFilter.cs" />
     <Compile Include="Models\Helpers\SlugConverter.cs" />
     <Compile Include="Controllers\TicketCommentsController.cs" />
     <Compile Include="Controllers\TicketsController.cs" />

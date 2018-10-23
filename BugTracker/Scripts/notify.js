@@ -51,7 +51,7 @@ notification.client.sendNotificationToDeveloper = function (projName, ticketName
 								});
 
 };
-				//$.connection.hub.start().done();
+				$.connection.hub.start().done();
 				//// Get the user name and store it to prepend to messages.
 				//$('#displayname').val(prompt('Enter your name:', ''));
 				//// Set initial focus to message input box.

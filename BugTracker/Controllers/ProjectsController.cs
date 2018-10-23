@@ -28,7 +28,7 @@ namespace BugTracker.Controllers
         // GET: Projects
         public ActionResult Index(string query)
         {
-
+            Session["test"] = 1;
             if ((User.Identity.IsAuthenticated && User.IsInRole("Submitter")) || (User.Identity.IsAuthenticated && User.IsInRole("Developer")))
             {
                 var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
@@ -80,6 +80,7 @@ namespace BugTracker.Controllers
         // GET: Projects/Details/5
         public ActionResult Details(int? id)
         {
+            var test = Session["test"];
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

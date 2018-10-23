@@ -67,6 +67,7 @@ namespace BugTracker.Controllers
             ApplicationUser userDB = UserHelper.GetDemoUser(role);
             if (userDB != null)
             {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                 var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
                 signInManager.SignIn(userDB, isPersistent: false, rememberBrowser: false);
             }
