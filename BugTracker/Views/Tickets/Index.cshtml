@@ -1,11 +1,13 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
-@using PagedList;
-@using PagedList.Mvc;
+@*@using PagedList;
+    @using PagedList.Mvc;*@
 
-@{
-    var pagedList = (IPagedList)Model;
-    var currentPage = pagedList.PageNumber;
-}
+@*@{
+        var pagedList = (IPagedList)Model;
+        var currentPage = pagedList.PageNumber;
+    }*@
+
+<link href="~/Content/Template/vendor/datatables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -24,81 +26,90 @@
                 @if (Model != null)
                 {
 
-                    <table class="table">
-                        <tr>
-                            <th>
-                                Project
-                            </th>
-                            <th>
-                                Author name
-                            </th>
-                            <th>
-                                Assigned developer
-                            </th>
-                            <th>
-                                @if (ViewBag.Sorted == "a-z")
-                                {
-                                    <a href=@Url.Action(ViewBag.Controller, new { page = currentPage, sortedByTitle = "z-a", query = ViewBag.searchText })><i class="fas fa-sort-alpha-down fa-fw"></i> Title</a>
-
-                                }
-                                else
-                                {
-                                    <a href=@Url.Action(ViewBag.Controller, new { page = currentPage, sortedByTitle = "a-z", query = ViewBag.searchText })><i class="fas fa-sort-alpha-up fa-fw"></i> Title</a>
-                                }
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Description)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Created)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Updated)
-                            </th>
-                            <th></th>
-                        </tr>
-
-                        @foreach (var item in Model)
-                        {
+                    <table class="table" id="myTable">
+                        <thead>
                             <tr>
-                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Project.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Author.DisplayName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Developer.DisplayName)
-                                </td>
+                                <th>
+                                    Project
+                                </th>
+                                <th>
+                                    Author name
+                                </th>
+                                <th>
+                                    Assigned developer
+                                </th>
+                                <th>
+                                    @*@if (ViewBag.Sorted == "a-z")
+                                        {
+                                            <a href=@Url.Action(ViewBag.Controller, new { page = currentPage, sortedByTitle = "z-a", query = ViewBag.searchText })><i class="fas fa-sort-alpha-down fa-fw"></i> Title</a>
 
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Title)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Description)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Created)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Updated)
-                                </td>
-                                <td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("Comments", "Details", new { id = item.Id }) (@item.Comments.Count) |
-                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-
-                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                                </td>
+                                        }
+                                        else
+                                        {
+                                            <a href=@Url.Action(ViewBag.Controller, new { page = currentPage, sortedByTitle = "a-z", query = ViewBag.searchText })><i class="fas fa-sort-alpha-up fa-fw"></i> Title</a>
+                                        }*@
+                                    Title
+                                </th>
+                                <th>Ticket type</th>
+                                <th>Ticket status</th>
+                                <th>Ticket priority</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Created)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Updated)
+                                </th>
+                                <th></th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Project.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Author.DisplayName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Developer.DisplayName)
+                                    </td>
 
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td> @Html.DisplayFor(modelItem => item.TicketType.Name)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.TicketStatus.Name)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.TicketPriority.Name)</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Updated)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                        @Html.ActionLink("Comments", "Details", new { id = item.Id }) (@item.Comments.Count) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
                     </table>
 
-                    <nav aria-label="Page navigation" class="pagination_section">
-                        Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of     @pagedList.PageCount
-                        @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, sortedByTitle = ViewBag.Sorted, query = ViewBag.searchText }))
-                    </nav>
+                    @*<nav aria-label="Page navigation" class="pagination_section">
+                            Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of     @pagedList.PageCount
+                            @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, sortedByTitle = ViewBag.Sorted, query = ViewBag.searchText }))
+                        </nav>*@
                 }
                 else
                 {
@@ -108,8 +119,17 @@
             </div>
         </div>
     </div>
-} else
+}
+else
 {
     <h4>Please log in to see the tickets.</h4>
 }
 
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/Template/vendor/datatables/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });</script>
+}

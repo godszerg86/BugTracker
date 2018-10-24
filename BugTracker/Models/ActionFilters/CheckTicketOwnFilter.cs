@@ -30,7 +30,6 @@ namespace BugTracker.Models.ActionFilters
                 || ((ticket.DeveloperId == userDB.Id) && filterContext.HttpContext.User.IsInRole("Developer")))
             {
                 return;
-
             }
             else
             {
