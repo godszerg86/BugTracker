@@ -101,19 +101,19 @@ namespace BugTracker.Controllers
         {
             ViewBag.Controller = "MyTickets";
             string userID = User.Identity.GetUserId();
-            int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
-            int pageNumber = (page ?? 1);
+            //int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
+            //int pageNumber = (page ?? 1);
             if (User.IsInRole("Developer"))
             {
                 var tickets = db.Tickets.Where(t => t.DeveloperId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
-                return View("Index", tickets.ToPagedList(pageNumber, pageSize));
+                return View("Index", tickets/*.ToPagedList(pageNumber, pageSize)*/);
             }
 
             if (User.IsInRole("Submitter"))
             {
 
                 var tickets = db.Tickets.Where(t => t.AuthorId == userID).Include(t => t.Author).Include(t => t.Developer).Include(t => t.Project).ToList();
-                return View("Index", tickets.ToPagedList(pageNumber, pageSize));
+                return View("Index", tickets/*.ToPagedList(pageNumber, pageSize)*/);
             }
 
             return View("NoAccess");
@@ -123,8 +123,8 @@ namespace BugTracker.Controllers
         {
             ViewBag.Controller = "MyProjectsTickets";
 
-            int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
-            int pageNumber = (page ?? 1);
+            //int pageSize = (pageSizeIn ?? 10); // display three blog posts at a time on this page
+            //int pageNumber = (page ?? 1);
 
 
             if ((User.IsInRole("Project Manager") && User.Identity.IsAuthenticated)
@@ -140,7 +140,7 @@ namespace BugTracker.Controllers
                         tickets.Add(ticket);
                     }
                 }
-                return View("Index", tickets.ToPagedList(pageNumber, pageSize));
+                return View("Index", tickets/*.ToPagedList(pageNumber, pageSize)*/);
             }
 
             return View("NoAccess");
