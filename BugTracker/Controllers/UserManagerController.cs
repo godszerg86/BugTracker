@@ -33,15 +33,18 @@ namespace BugTracker.Controllers
             //var userHelper = new UserHelper();
             foreach (var user in usersDB)
             {
-                UserListModel userModel = new UserListModel();
-                userModel.DisplayName = user.DisplayName;
-                userModel.LastName = user.LastName;
-                userModel.FirstName = user.FirstName;
-                userModel.Id = user.Id;
-                userModel.ProjectsCreated = user.ProjectsCreated.ToList();
-                userModel.ProjectAssigned = user.ProjectsManage.ToList();
-                userModel.Roles = UserHelper.GetRoles(user.Id);
-                userList.Add(userModel);
+                if (user.Email != "admin@admin.com")
+                {
+                    UserListModel userModel = new UserListModel();
+                    userModel.DisplayName = user.DisplayName;
+                    userModel.LastName = user.LastName;
+                    userModel.FirstName = user.FirstName;
+                    userModel.Id = user.Id;
+                    userModel.ProjectsCreated = user.ProjectsCreated.ToList();
+                    userModel.ProjectAssigned = user.ProjectsManage.ToList();
+                    userModel.Roles = UserHelper.GetRoles(user.Id);
+                    userList.Add(userModel);
+                }
             }
 
             return View(userList);
