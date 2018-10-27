@@ -26,10 +26,10 @@ namespace BugTracker.Controllers
 
 
         // GET: Projects
+        [Authorize(Roles = "Submitter,Developer,Project Manager,Admin")]
         public ActionResult Index(string query)
         {
-            Session["test"] = 1;
-            if ((User.Identity.IsAuthenticated && User.IsInRole("Submitter")) || (User.Identity.IsAuthenticated && User.IsInRole("Developer")))
+            if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
             {
                 var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
                 if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query))
@@ -44,13 +44,8 @@ namespace BugTracker.Controllers
                 }
             }
 
-            //if (User.Identity.IsAuthenticated && User.IsInRole("Developer"))
-            //{
-            //    var userDB = UserHelper.GetUserById(User.Identity.GetUserId());
-            //    return View(userDB.ProjectsManage.ToList());
-            //}
-
-            if ((User.Identity.IsAuthenticated && User.IsInRole("Project Manager")) || (User.Identity.IsAuthenticated && User.IsInRole("Admin")))
+      
+            if (User.IsInRole("Project Manager") || User.IsInRole("Admin"))
             {
                 if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query))
                 {
@@ -62,18 +57,7 @@ namespace BugTracker.Controllers
                 }
             }
 
-            //if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            //{
-            //    return View(db.Projects.ToList());
-            //}
-
-            //Demo functionalitiy
-
-            //if (User.Identity.IsAuthenticated && User.IsInRole("Demo User"))
-            //{
-            //    return View(db.Projects.ToList());
-            //}
-
+            
             return View();
         }
 
